@@ -1,0 +1,87 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ChunkifyAnalytics\Quality\QualityBreakdownPage;
+
+use ChunkifyAnalytics\Core\Attributes\Required;
+use ChunkifyAnalytics\Core\Concerns\SdkModel;
+use ChunkifyAnalytics\Core\Contracts\BaseModel;
+use ChunkifyAnalytics\Quality\Quality;
+
+/**
+ * @phpstan-import-type QualityShape from \ChunkifyAnalytics\Quality\Quality
+ *
+ * @phpstan-type GroupShape = array{data: Quality|QualityShape, value: string|null}
+ */
+final class Group implements BaseModel
+{
+    /** @use SdkModel<GroupShape> */
+    use SdkModel;
+
+    /**
+     * Playback quality for the same start cohort as summary. All rates are fractions. Counts expose measurement coverage.
+     */
+    #[Required]
+    public Quality $data;
+
+    #[Required]
+    public ?string $value;
+
+    /**
+     * `new Group()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * Group::with(data: ..., value: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new Group)->withData(...)->withValue(...)
+     * ```
+     */
+    public function __construct()
+    {
+        $this->initialize();
+    }
+
+    /**
+     * Construct an instance from the required parameters.
+     *
+     * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Quality|QualityShape $data
+     */
+    public static function with(Quality|array $data, ?string $value): self
+    {
+        $self = new self;
+
+        $self['data'] = $data;
+        $self['value'] = $value;
+
+        return $self;
+    }
+
+    /**
+     * Playback quality for the same start cohort as summary. All rates are fractions. Counts expose measurement coverage.
+     *
+     * @param Quality|QualityShape $data
+     */
+    public function withData(Quality|array $data): self
+    {
+        $self = clone $this;
+        $self['data'] = $data;
+
+        return $self;
+    }
+
+    public function withValue(?string $value): self
+    {
+        $self = clone $this;
+        $self['value'] = $value;
+
+        return $self;
+    }
+}
