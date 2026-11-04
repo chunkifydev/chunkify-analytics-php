@@ -1,5 +1,10 @@
 # Chunkify Analytics PHP API library
 
+This is the API client for the Chunkify Analytics server. For automatic playback tracking
+in a browser, use [`@chunkify/player-analytics`](https://www.npmjs.com/package/@chunkify/player-analytics).
+
+For event ingestion, use typed event models as described in [INGESTION.md](INGESTION.md).
+
 The Chunkify Analytics PHP library provides convenient access to the Chunkify Analytics REST API from any PHP 8.1.0+ application.
 
 It is generated with [Stainless](https://www.stainless.com/).
