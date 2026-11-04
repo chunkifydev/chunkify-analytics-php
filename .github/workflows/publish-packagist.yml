@@ -7,6 +7,7 @@ on:
 
 jobs:
   publish:
+    if: github.repository == 'chunkifydev/chunkify-analytics-php' && !github.event.repository.private
     name: publish
     runs-on: ubuntu-latest
 
