@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ChunkifyAnalytics\Engagement\EngagementRetrieveParams;
+
+/**
+ * Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites.
+ */
+enum GroupBy: string
+{
+    case BROWSER_NAME = 'browser_name';
+
+    case OS_NAME = 'os_name';
+
+    case DEVICE_TYPE = 'device_type';
+
+    case CONTINENT = 'continent';
+
+    case COUNTRY = 'country';
+
+    case CITY = 'city';
+
+    case PAGE_ORIGIN = 'page_origin';
+
+    case PAGE_PATH = 'page_path';
+}
