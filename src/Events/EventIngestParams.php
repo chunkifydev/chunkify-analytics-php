@@ -14,6 +14,10 @@ use ChunkifyAnalytics\Events\EventIngestParams\ContentEncoding;
 /**
  * Send one playback event using a public key. Success confirms storage completed.
  *
+ * Configure the client with a public ingestion key for this method. The SDK
+ * sends the event you supply; it does not collect playback events automatically.
+ * For automatic browser player tracking, use `@chunkify/player-analytics`.
+ *
  * @see ChunkifyAnalytics\Services\EventsService::ingest()
  *
  * @phpstan-import-type AnalyticsEventVariants from \ChunkifyAnalytics\Events\AnalyticsEvent

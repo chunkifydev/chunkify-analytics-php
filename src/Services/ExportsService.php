@@ -69,6 +69,10 @@ final class ExportsService implements ExportsContract
      *
      * The token authorizes only its saved project and query. Requires no Authorization header and accepts no query parameters. Generate CSV on demand from one read snapshot on a dedicated connection; stream with bounded application buffers and backpressure. Dataset is selected when the link is opened. Rows are not capped by query pagination. Nested metric columns use slash-separated paths. Events have documented scalar columns and flat context.* columns. Custom attributes, nested arrays and historical OTLP payloads are excluded. CSV cells never contain JSON objects or arrays. Nulls are empty cells; spreadsheet-formula strings are prefixed with an apostrophe. Interrupted or failed downloads terminate the stream; retry the full download. No files are retained. Defaults: 2 download starts/minute per project with burst capacity 2, one active CSV generation per project and four server-wide. Limits are shared across keys and links. Excess requests receive 429 with Retry-After instead of queueing. Override limits in config.toml [rate_limits]. Link expiry is checked before starting, not during an active download. S3 retention/deletion can remove source objects during a download.
      *
+     * The download URL contains the credential needed for this request. Treat it
+     * as a secret until it expires. You can call this method without configuring
+     * an API key on the client.
+     *
      * @param string $token Unguessable scoped download credential. No project key is needed.
      * @param RequestOpts|null $requestOptions
      *

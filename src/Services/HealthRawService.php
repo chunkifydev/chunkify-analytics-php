@@ -29,6 +29,9 @@ final class HealthRawService implements HealthRawContract
      *
      * Check whether the service is ready.
      *
+     * No API key is required. This checks collector readiness and does not return
+     * project analytics.
+     *
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<Health>
