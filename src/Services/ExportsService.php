@@ -103,7 +103,7 @@ final class ExportsService implements ExportsContract
     public function listColumns(
         \ChunkifyAnalytics\Exports\ExportListColumnsParams\Resource|string $resource,
         GroupBy|string|null $groupBy = null,
-        Kind|string $kind = 'summary',
+        Kind|string|null $kind = null,
         RequestOptions|array|null $requestOptions = null,
     ): ExportColumns {
         $params = Util::removeNulls(
