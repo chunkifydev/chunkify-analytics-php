@@ -69,7 +69,7 @@ final class SummaryService implements SummaryContract
         DeviceType|string|null $deviceType = null,
         ?\DateTimeInterface $from = null,
         GroupBy|string|null $groupBy = null,
-        int $limit = 100,
+        ?int $limit = null,
         ?string $osName = null,
         ?string $pageOrigin = null,
         ?string $pagePath = null,
