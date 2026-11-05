@@ -35,6 +35,9 @@ final class HealthService implements HealthContract
      *
      * Check whether the service is ready.
      *
+     * No API key is required. This checks collector readiness and does not return
+     * project analytics.
+     *
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
