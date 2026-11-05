@@ -126,6 +126,10 @@ final class EventsService implements EventsContract
      *
      * Send one playback event using a public key. Success confirms storage completed.
      *
+     * Configure the client with a public ingestion key for this method. The SDK
+     * sends the event you supply; it does not collect playback events automatically.
+     * For automatic browser player tracking, use `@chunkify/player-analytics`.
+     *
      * @param AnalyticsEventShape $event Body param: A schema version 1 playback event. Extra properties are preserved.
      * @param ContentEncoding|value-of<ContentEncoding> $contentEncoding Header param: JSON requests accept an absent Content-Encoding header or identity. Compression is not supported.
      * @param string $origin Header param: Optional browser origin. When supplied it must exactly match server.allowed_origins. Origin-less server requests are allowed with the public key.
