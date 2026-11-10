@@ -20,7 +20,7 @@ interface DimensionsRawContract
     /**
      * @api
      *
-     * @param Dimension|string $dimension discover values from first retained view-start context, with view counts
+     * @param string|Dimension $dimension One custom dimension's values, such as custom.plan.
      * @param array<string,mixed>|DimensionListValuesParams $params
      * @param RequestOpts|null $requestOptions
      *

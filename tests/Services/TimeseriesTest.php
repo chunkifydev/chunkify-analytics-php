@@ -69,9 +69,13 @@ final class TimeseriesTest extends TestCase
             osName: 'x',
             pageOrigin: 'x',
             pagePath: 'x',
-            videoID: 'video_id',
+            playbackRate: '269125115713',
+            subtitleLanguage: 'P',
+            userID: 'x',
+            videoID: 'P',
+            videoTitle: 'x',
             viewID: 'x',
-            viewerID: 'viewer_id',
+            viewerID: 'x',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
