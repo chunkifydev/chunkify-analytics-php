@@ -20,7 +20,7 @@ use ChunkifyAnalytics\Exports\ExportListColumnsParams\Resource;
  *
  * @phpstan-type ExportListColumnsParamsShape = array{
  *   resource: Resource|value-of<Resource>,
- *   groupBy?: null|GroupBy|value-of<GroupBy>,
+ *   groupBy?: string|null|GroupBy|value-of<GroupBy>,
  *   kind?: null|Kind|value-of<Kind>,
  * }
  */
@@ -39,9 +39,9 @@ final class ExportListColumnsParams implements BaseModel
     public string $resource;
 
     /**
-     * Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites.
+     * Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites. video_title groups by the title on each view's first retained start, so a renamed video counts each view under the title it started with. user_id groups by the user ID on each view's first retained start. Use custom.<key>, such as custom.plan, to group by a custom dimension; views without the key form the null group.
      *
-     * @var value-of<GroupBy>|null $groupBy
+     * @var string|value-of<GroupBy>|null $groupBy
      */
     #[Optional(enum: GroupBy::class)]
     public ?string $groupBy;
@@ -79,7 +79,7 @@ final class ExportListColumnsParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param resource|value-of<resource> $resource
-     * @param GroupBy|value-of<GroupBy>|null $groupBy
+     * @param string|GroupBy|value-of<GroupBy>|null $groupBy
      * @param Kind|value-of<Kind>|null $kind
      */
     public static function with(
@@ -111,9 +111,9 @@ final class ExportListColumnsParams implements BaseModel
     }
 
     /**
-     * Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites.
+     * Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites. video_title groups by the title on each view's first retained start, so a renamed video counts each view under the title it started with. user_id groups by the user ID on each view's first retained start. Use custom.<key>, such as custom.plan, to group by a custom dimension; views without the key form the null group.
      *
-     * @param GroupBy|value-of<GroupBy> $groupBy
+     * @param string|GroupBy|value-of<GroupBy> $groupBy
      */
     public function withGroupBy(GroupBy|string $groupBy): self
     {
