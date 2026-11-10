@@ -29,5 +29,9 @@ enum Resource: string
 
     case RENDITIONS = 'renditions';
 
+    case SUBTITLES = 'subtitles';
+
+    case PLAYBACK_RATES = 'playback_rates';
+
     case RETENTION = 'retention';
 }

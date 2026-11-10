@@ -40,7 +40,7 @@ final class RetentionTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->retention->retrieve(videoID: 'video_id');
+        $result = $this->client->retention->retrieve(videoID: 'P');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(RetentionReport::class, $result);
@@ -54,7 +54,7 @@ final class RetentionTest extends TestCase
         }
 
         $result = $this->client->retention->retrieve(
-            videoID: 'video_id',
+            videoID: 'P',
             browserName: 'x',
             city: 'x',
             continent: 'AF',
@@ -64,9 +64,13 @@ final class RetentionTest extends TestCase
             osName: 'x',
             pageOrigin: 'x',
             pagePath: 'x',
+            playbackRate: '269125115713',
+            subtitleLanguage: 'P',
             to: new \DateTimeImmutable('2019-12-27T18:11:19.117Z'),
+            userID: 'x',
+            videoTitle: 'x',
             viewID: 'x',
-            viewerID: 'viewer_id',
+            viewerID: 'x',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

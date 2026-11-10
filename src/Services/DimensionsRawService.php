@@ -35,7 +35,7 @@ final class DimensionsRawService implements DimensionsRawContract
      *
      * Values and view counts come from the first retained view starts, after applying the same cohort filters as summary. Values sort by views descending, then value ascending with null first for ties; missing context is separate from the literal unknown. Cursors bind the dimension, filters, project and ingestion watermark.
      *
-     * @param Dimension|value-of<Dimension> $dimension discover values from first retained view-start context, with view counts
+     * @param string|Dimension|value-of<Dimension> $dimension One custom dimension's values, such as custom.plan.
      * @param array{
      *   browserName?: string,
      *   city?: string,
@@ -48,8 +48,12 @@ final class DimensionsRawService implements DimensionsRawContract
      *   osName?: string,
      *   pageOrigin?: string,
      *   pagePath?: string,
+     *   playbackRate?: string,
+     *   subtitleLanguage?: string,
      *   to?: \DateTimeInterface,
+     *   userID?: string,
      *   videoID?: string,
+     *   videoTitle?: string,
      *   viewID?: string,
      *   viewerID?: string,
      * }|DimensionListValuesParams $params
@@ -81,7 +85,11 @@ final class DimensionsRawService implements DimensionsRawContract
                     'osName' => 'os_name',
                     'pageOrigin' => 'page_origin',
                     'pagePath' => 'page_path',
+                    'playbackRate' => 'playback_rate',
+                    'subtitleLanguage' => 'subtitle_language',
+                    'userID' => 'user_id',
                     'videoID' => 'video_id',
+                    'videoTitle' => 'video_title',
                     'viewID' => 'view_id',
                     'viewerID' => 'viewer_id',
                 ],
