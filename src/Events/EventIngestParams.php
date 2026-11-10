@@ -41,7 +41,7 @@ final class EventIngestParams implements BaseModel
      * @var AnalyticsEventVariants $event
      */
     #[Required]
-    public ViewStarted|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted $event;
+    public ViewStarted|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted|SubtitleChanged|PlaybackRateChanged $event;
 
     /** @var value-of<ContentEncoding>|null $contentEncoding */
     #[Optional(enum: ContentEncoding::class)]
@@ -78,7 +78,7 @@ final class EventIngestParams implements BaseModel
      * @param ContentEncoding|value-of<ContentEncoding>|null $contentEncoding
      */
     public static function with(
-        ViewStarted|array|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted $event,
+        ViewStarted|array|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted|SubtitleChanged|PlaybackRateChanged $event,
         ContentEncoding|string|null $contentEncoding = null,
         ?string $origin = null,
     ): self {
@@ -98,7 +98,7 @@ final class EventIngestParams implements BaseModel
      * @param AnalyticsEventShape $event
      */
     public function withEvent(
-        ViewStarted|array|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted $event,
+        ViewStarted|array|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted|SubtitleChanged|PlaybackRateChanged $event,
     ): self {
         $self = clone $this;
         $self['event'] = $event;

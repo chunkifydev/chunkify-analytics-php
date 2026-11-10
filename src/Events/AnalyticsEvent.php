@@ -18,9 +18,11 @@ use ChunkifyAnalytics\Core\Conversion\Contracts\ConverterSource;
  * @phpstan-import-type PlaybackStateChangedShape from \ChunkifyAnalytics\Events\PlaybackStateChanged
  * @phpstan-import-type RenditionChangedShape from \ChunkifyAnalytics\Events\RenditionChanged
  * @phpstan-import-type SeekCompletedShape from \ChunkifyAnalytics\Events\SeekCompleted
+ * @phpstan-import-type SubtitleChangedShape from \ChunkifyAnalytics\Events\SubtitleChanged
+ * @phpstan-import-type PlaybackRateChangedShape from \ChunkifyAnalytics\Events\PlaybackRateChanged
  *
- * @phpstan-type AnalyticsEventVariants = ViewStarted|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted
- * @phpstan-type AnalyticsEventShape = AnalyticsEventVariants|ViewStartedShape|ViewSnapshotShape|PlaybackErrorShape|ViewEndedShape|PlaybackStateChangedShape|RenditionChangedShape|SeekCompletedShape
+ * @phpstan-type AnalyticsEventVariants = ViewStarted|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted|SubtitleChanged|PlaybackRateChanged
+ * @phpstan-type AnalyticsEventShape = AnalyticsEventVariants|ViewStartedShape|ViewSnapshotShape|PlaybackErrorShape|ViewEndedShape|PlaybackStateChangedShape|RenditionChangedShape|SeekCompletedShape|SubtitleChangedShape|PlaybackRateChangedShape
  */
 final class AnalyticsEvent implements ConverterSource
 {
@@ -39,6 +41,8 @@ final class AnalyticsEvent implements ConverterSource
             PlaybackStateChanged::class,
             RenditionChanged::class,
             SeekCompleted::class,
+            SubtitleChanged::class,
+            PlaybackRateChanged::class,
         ];
     }
 }

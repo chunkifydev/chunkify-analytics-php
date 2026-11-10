@@ -19,4 +19,8 @@ enum EventName: string
     case CHUNKIFY_VIDEO_RENDITION_CHANGED = 'chunkify.video.rendition_changed';
 
     case CHUNKIFY_VIDEO_SEEK_COMPLETED = 'chunkify.video.seek_completed';
+
+    case CHUNKIFY_VIDEO_SUBTITLE_CHANGED = 'chunkify.video.subtitle_changed';
+
+    case CHUNKIFY_VIDEO_PLAYBACK_RATE_CHANGED = 'chunkify.video.playback_rate_changed';
 }

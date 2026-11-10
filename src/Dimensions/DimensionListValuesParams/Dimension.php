@@ -16,6 +16,10 @@ enum Dimension: string
 
     case VIEWER_ID = 'viewer_id';
 
+    case USER_ID = 'user_id';
+
+    case VIDEO_TITLE = 'video_title';
+
     case CONTINENT = 'continent';
 
     case COUNTRY = 'country';
@@ -25,4 +29,10 @@ enum Dimension: string
     case PAGE_ORIGIN = 'page_origin';
 
     case PAGE_PATH = 'page_path';
+
+    case SUBTITLE_LANGUAGE = 'subtitle_language';
+
+    case PLAYBACK_RATE = 'playback_rate';
+
+    case CUSTOM_KEYS = 'custom_keys';
 }
