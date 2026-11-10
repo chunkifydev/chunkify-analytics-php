@@ -14,7 +14,7 @@ use ChunkifyAnalytics\Dimensions\DimensionValues\Value;
  * @phpstan-import-type ValueShape from \ChunkifyAnalytics\Dimensions\DimensionValues\Value
  *
  * @phpstan-type DimensionValuesShape = array{
- *   dimension: Dimension|value-of<Dimension>,
+ *   dimension: string|Dimension|value-of<Dimension>,
  *   nextCursor: string|null,
  *   values: list<Value|ValueShape>,
  * }
@@ -24,7 +24,11 @@ final class DimensionValues implements BaseModel
     /** @use SdkModel<DimensionValuesShape> */
     use SdkModel;
 
-    /** @var value-of<Dimension> $dimension */
+    /**
+     * One custom dimension's values, such as custom.plan.
+     *
+     * @var string|value-of<Dimension> $dimension
+     */
     #[Required(enum: Dimension::class)]
     public string $dimension;
 
@@ -59,7 +63,7 @@ final class DimensionValues implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Dimension|value-of<Dimension> $dimension
+     * @param string|Dimension|value-of<Dimension> $dimension
      * @param list<Value|ValueShape> $values
      */
     public static function with(
@@ -77,7 +81,9 @@ final class DimensionValues implements BaseModel
     }
 
     /**
-     * @param Dimension|value-of<Dimension> $dimension
+     * One custom dimension's values, such as custom.plan.
+     *
+     * @param string|Dimension|value-of<Dimension> $dimension
      */
     public function withDimension(Dimension|string $dimension): self
     {

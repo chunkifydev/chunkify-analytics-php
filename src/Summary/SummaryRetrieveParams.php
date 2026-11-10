@@ -25,13 +25,17 @@ use ChunkifyAnalytics\Summary\SummaryRetrieveParams\GroupBy;
  *   cursor?: string|null,
  *   deviceType?: null|DeviceType|value-of<DeviceType>,
  *   from?: \DateTimeInterface|null,
- *   groupBy?: null|GroupBy|value-of<GroupBy>,
+ *   groupBy?: string|null|GroupBy|value-of<GroupBy>,
  *   limit?: int|null,
  *   osName?: string|null,
  *   pageOrigin?: string|null,
  *   pagePath?: string|null,
+ *   playbackRate?: string|null,
+ *   subtitleLanguage?: string|null,
  *   to?: \DateTimeInterface|null,
+ *   userID?: string|null,
  *   videoID?: string|null,
+ *   videoTitle?: string|null,
  *   viewID?: string|null,
  *   viewerID?: string|null,
  * }
@@ -89,9 +93,9 @@ final class SummaryRetrieveParams implements BaseModel
     public ?\DateTimeInterface $from;
 
     /**
-     * Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites.
+     * Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites. video_title groups by the title on each view's first retained start, so a renamed video counts each view under the title it started with. user_id groups by the user ID on each view's first retained start. Use custom.<key>, such as custom.plan, to group by a custom dimension; views without the key form the null group.
      *
-     * @var value-of<GroupBy>|null $groupBy
+     * @var string|value-of<GroupBy>|null $groupBy
      */
     #[Optional(enum: GroupBy::class)]
     public ?string $groupBy;
@@ -121,16 +125,40 @@ final class SummaryRetrieveParams implements BaseModel
     public ?string $pagePath;
 
     /**
+     * Playback rate from 0.01 to 16 with at most two decimals, such as 1, 1.5 or 2; 2.0 and 2 are the same rate. Metrics use the rate on the first retained view start; raw events use each event's value.
+     */
+    #[Optional]
+    public ?string $playbackRate;
+
+    /**
+     * Exact, case-sensitive, non-blank subtitle language tag, such as fr or en-US; und for a subtitles track without a language. Metrics use the language showing on the first retained view start; raw events use each event's value. Views without subtitles at start do not match.
+     */
+    #[Optional]
+    public ?string $subtitleLanguage;
+
+    /**
      * Exclusive RFC3339 occurrence-time upper bound, with timezone. Summary/video queries apply it to the selected view_started event.
      */
     #[Optional]
     public ?\DateTimeInterface $to;
 
     /**
-     * Exact video ID. Combined with all other filters using AND.
+     * Exact integrator-supplied user ID. Selects views by their start event; event lists match each event's own value. Missing/null user IDs do not match. Reports with this filter read one stored row per view.
+     */
+    #[Optional]
+    public ?string $userID;
+
+    /**
+     * Exact video ID; must not be blank. Combined with all other filters using AND.
      */
     #[Optional]
     public ?string $videoID;
+
+    /**
+     * Exact, case-sensitive video title. Selects views by the title on their first retained start; event lists match each event's own value. Views without a title do not match. Reports with this filter read one stored row per view.
+     */
+    #[Optional]
+    public ?string $videoTitle;
 
     /**
      * Filter one playback attempt by view ID. Metrics use its first retained start.
@@ -139,7 +167,7 @@ final class SummaryRetrieveParams implements BaseModel
     public ?string $viewID;
 
     /**
-     * Exact supplied viewer ID. Missing/null viewer IDs do not match.
+     * Exact viewer ID. The Chunkify player SDK generates one per browser; missing/null viewer IDs do not match.
      */
     #[Optional]
     public ?string $viewerID;
@@ -156,7 +184,7 @@ final class SummaryRetrieveParams implements BaseModel
      *
      * @param Continent|value-of<Continent>|null $continent
      * @param DeviceType|value-of<DeviceType>|null $deviceType
-     * @param GroupBy|value-of<GroupBy>|null $groupBy
+     * @param string|GroupBy|value-of<GroupBy>|null $groupBy
      */
     public static function with(
         ?string $browserName = null,
@@ -171,8 +199,12 @@ final class SummaryRetrieveParams implements BaseModel
         ?string $osName = null,
         ?string $pageOrigin = null,
         ?string $pagePath = null,
+        ?string $playbackRate = null,
+        ?string $subtitleLanguage = null,
         ?\DateTimeInterface $to = null,
+        ?string $userID = null,
         ?string $videoID = null,
+        ?string $videoTitle = null,
         ?string $viewID = null,
         ?string $viewerID = null,
     ): self {
@@ -190,8 +222,12 @@ final class SummaryRetrieveParams implements BaseModel
         null !== $osName && $self['osName'] = $osName;
         null !== $pageOrigin && $self['pageOrigin'] = $pageOrigin;
         null !== $pagePath && $self['pagePath'] = $pagePath;
+        null !== $playbackRate && $self['playbackRate'] = $playbackRate;
+        null !== $subtitleLanguage && $self['subtitleLanguage'] = $subtitleLanguage;
         null !== $to && $self['to'] = $to;
+        null !== $userID && $self['userID'] = $userID;
         null !== $videoID && $self['videoID'] = $videoID;
+        null !== $videoTitle && $self['videoTitle'] = $videoTitle;
         null !== $viewID && $self['viewID'] = $viewID;
         null !== $viewerID && $self['viewerID'] = $viewerID;
 
@@ -280,9 +316,9 @@ final class SummaryRetrieveParams implements BaseModel
     }
 
     /**
-     * Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites.
+     * Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites. video_title groups by the title on each view's first retained start, so a renamed video counts each view under the title it started with. user_id groups by the user ID on each view's first retained start. Use custom.<key>, such as custom.plan, to group by a custom dimension; views without the key form the null group.
      *
-     * @param GroupBy|value-of<GroupBy> $groupBy
+     * @param string|GroupBy|value-of<GroupBy> $groupBy
      */
     public function withGroupBy(GroupBy|string $groupBy): self
     {
@@ -337,6 +373,28 @@ final class SummaryRetrieveParams implements BaseModel
     }
 
     /**
+     * Playback rate from 0.01 to 16 with at most two decimals, such as 1, 1.5 or 2; 2.0 and 2 are the same rate. Metrics use the rate on the first retained view start; raw events use each event's value.
+     */
+    public function withPlaybackRate(string $playbackRate): self
+    {
+        $self = clone $this;
+        $self['playbackRate'] = $playbackRate;
+
+        return $self;
+    }
+
+    /**
+     * Exact, case-sensitive, non-blank subtitle language tag, such as fr or en-US; und for a subtitles track without a language. Metrics use the language showing on the first retained view start; raw events use each event's value. Views without subtitles at start do not match.
+     */
+    public function withSubtitleLanguage(string $subtitleLanguage): self
+    {
+        $self = clone $this;
+        $self['subtitleLanguage'] = $subtitleLanguage;
+
+        return $self;
+    }
+
+    /**
      * Exclusive RFC3339 occurrence-time upper bound, with timezone. Summary/video queries apply it to the selected view_started event.
      */
     public function withTo(\DateTimeInterface $to): self
@@ -348,12 +406,34 @@ final class SummaryRetrieveParams implements BaseModel
     }
 
     /**
-     * Exact video ID. Combined with all other filters using AND.
+     * Exact integrator-supplied user ID. Selects views by their start event; event lists match each event's own value. Missing/null user IDs do not match. Reports with this filter read one stored row per view.
+     */
+    public function withUserID(string $userID): self
+    {
+        $self = clone $this;
+        $self['userID'] = $userID;
+
+        return $self;
+    }
+
+    /**
+     * Exact video ID; must not be blank. Combined with all other filters using AND.
      */
     public function withVideoID(string $videoID): self
     {
         $self = clone $this;
         $self['videoID'] = $videoID;
+
+        return $self;
+    }
+
+    /**
+     * Exact, case-sensitive video title. Selects views by the title on their first retained start; event lists match each event's own value. Views without a title do not match. Reports with this filter read one stored row per view.
+     */
+    public function withVideoTitle(string $videoTitle): self
+    {
+        $self = clone $this;
+        $self['videoTitle'] = $videoTitle;
 
         return $self;
     }
@@ -370,7 +450,7 @@ final class SummaryRetrieveParams implements BaseModel
     }
 
     /**
-     * Exact supplied viewer ID. Missing/null viewer IDs do not match.
+     * Exact viewer ID. The Chunkify player SDK generates one per browser; missing/null viewer IDs do not match.
      */
     public function withViewerID(string $viewerID): self
     {

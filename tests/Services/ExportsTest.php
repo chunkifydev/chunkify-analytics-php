@@ -74,11 +74,15 @@ final class ExportsTest extends TestCase
                 'osName' => 'x',
                 'pageOrigin' => 'x',
                 'pagePath' => 'x',
+                'playbackRate' => '269125115713',
                 'sortBy' => 'views',
+                'subtitleLanguage' => 'P',
                 'to' => new \DateTimeImmutable('2019-12-27T18:11:19.117Z'),
-                'videoID' => 'video_id',
+                'userID' => 'x',
+                'videoID' => 'P',
+                'videoTitle' => 'x',
                 'viewID' => 'x',
-                'viewerID' => 'viewer_id',
+                'viewerID' => 'x',
             ],
         );
 

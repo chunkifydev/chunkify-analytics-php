@@ -32,9 +32,13 @@ use ChunkifyAnalytics\Views\ViewListParams\SortBy;
  *   osName?: string|null,
  *   pageOrigin?: string|null,
  *   pagePath?: string|null,
+ *   playbackRate?: string|null,
  *   sortBy?: null|SortBy|value-of<SortBy>,
+ *   subtitleLanguage?: string|null,
  *   to?: \DateTimeInterface|null,
+ *   userID?: string|null,
  *   videoID?: string|null,
+ *   videoTitle?: string|null,
  *   viewID?: string|null,
  *   viewerID?: string|null,
  * }
@@ -130,6 +134,12 @@ final class ViewListParams implements BaseModel
     public ?string $pagePath;
 
     /**
+     * Playback rate from 0.01 to 16 with at most two decimals, such as 1, 1.5 or 2; 2.0 and 2 are the same rate. Metrics use the rate on the first retained view start; raw events use each event's value.
+     */
+    #[Optional]
+    public ?string $playbackRate;
+
+    /**
      * Sort all matching sessions before pagination. Missing values come last in both directions. Ties use view_id in the requested direction. Keep sort_by, order and filters unchanged with a cursor.
      *
      * @var value-of<SortBy>|null $sortBy
@@ -138,16 +148,34 @@ final class ViewListParams implements BaseModel
     public ?string $sortBy;
 
     /**
+     * Exact, case-sensitive, non-blank subtitle language tag, such as fr or en-US; und for a subtitles track without a language. Metrics use the language showing on the first retained view start; raw events use each event's value. Views without subtitles at start do not match.
+     */
+    #[Optional]
+    public ?string $subtitleLanguage;
+
+    /**
      * Exclusive RFC3339 occurrence-time upper bound, with timezone. Summary/video queries apply it to the selected view_started event.
      */
     #[Optional]
     public ?\DateTimeInterface $to;
 
     /**
-     * Exact video ID. Combined with all other filters using AND.
+     * Exact integrator-supplied user ID. Selects views by their start event; event lists match each event's own value. Missing/null user IDs do not match. Reports with this filter read one stored row per view.
+     */
+    #[Optional]
+    public ?string $userID;
+
+    /**
+     * Exact video ID; must not be blank. Combined with all other filters using AND.
      */
     #[Optional]
     public ?string $videoID;
+
+    /**
+     * Exact, case-sensitive video title. Selects views by the title on their first retained start; event lists match each event's own value. Views without a title do not match. Reports with this filter read one stored row per view.
+     */
+    #[Optional]
+    public ?string $videoTitle;
 
     /**
      * Filter one playback attempt by view ID. Metrics use its first retained start.
@@ -156,7 +184,7 @@ final class ViewListParams implements BaseModel
     public ?string $viewID;
 
     /**
-     * Exact supplied viewer ID. Missing/null viewer IDs do not match.
+     * Exact viewer ID. The Chunkify player SDK generates one per browser; missing/null viewer IDs do not match.
      */
     #[Optional]
     public ?string $viewerID;
@@ -190,9 +218,13 @@ final class ViewListParams implements BaseModel
         ?string $osName = null,
         ?string $pageOrigin = null,
         ?string $pagePath = null,
+        ?string $playbackRate = null,
         SortBy|string|null $sortBy = null,
+        ?string $subtitleLanguage = null,
         ?\DateTimeInterface $to = null,
+        ?string $userID = null,
         ?string $videoID = null,
+        ?string $videoTitle = null,
         ?string $viewID = null,
         ?string $viewerID = null,
     ): self {
@@ -211,9 +243,13 @@ final class ViewListParams implements BaseModel
         null !== $osName && $self['osName'] = $osName;
         null !== $pageOrigin && $self['pageOrigin'] = $pageOrigin;
         null !== $pagePath && $self['pagePath'] = $pagePath;
+        null !== $playbackRate && $self['playbackRate'] = $playbackRate;
         null !== $sortBy && $self['sortBy'] = $sortBy;
+        null !== $subtitleLanguage && $self['subtitleLanguage'] = $subtitleLanguage;
         null !== $to && $self['to'] = $to;
+        null !== $userID && $self['userID'] = $userID;
         null !== $videoID && $self['videoID'] = $videoID;
+        null !== $videoTitle && $self['videoTitle'] = $videoTitle;
         null !== $viewID && $self['viewID'] = $viewID;
         null !== $viewerID && $self['viewerID'] = $viewerID;
 
@@ -370,6 +406,17 @@ final class ViewListParams implements BaseModel
     }
 
     /**
+     * Playback rate from 0.01 to 16 with at most two decimals, such as 1, 1.5 or 2; 2.0 and 2 are the same rate. Metrics use the rate on the first retained view start; raw events use each event's value.
+     */
+    public function withPlaybackRate(string $playbackRate): self
+    {
+        $self = clone $this;
+        $self['playbackRate'] = $playbackRate;
+
+        return $self;
+    }
+
+    /**
      * Sort all matching sessions before pagination. Missing values come last in both directions. Ties use view_id in the requested direction. Keep sort_by, order and filters unchanged with a cursor.
      *
      * @param SortBy|value-of<SortBy> $sortBy
@@ -378,6 +425,17 @@ final class ViewListParams implements BaseModel
     {
         $self = clone $this;
         $self['sortBy'] = $sortBy;
+
+        return $self;
+    }
+
+    /**
+     * Exact, case-sensitive, non-blank subtitle language tag, such as fr or en-US; und for a subtitles track without a language. Metrics use the language showing on the first retained view start; raw events use each event's value. Views without subtitles at start do not match.
+     */
+    public function withSubtitleLanguage(string $subtitleLanguage): self
+    {
+        $self = clone $this;
+        $self['subtitleLanguage'] = $subtitleLanguage;
 
         return $self;
     }
@@ -394,12 +452,34 @@ final class ViewListParams implements BaseModel
     }
 
     /**
-     * Exact video ID. Combined with all other filters using AND.
+     * Exact integrator-supplied user ID. Selects views by their start event; event lists match each event's own value. Missing/null user IDs do not match. Reports with this filter read one stored row per view.
+     */
+    public function withUserID(string $userID): self
+    {
+        $self = clone $this;
+        $self['userID'] = $userID;
+
+        return $self;
+    }
+
+    /**
+     * Exact video ID; must not be blank. Combined with all other filters using AND.
      */
     public function withVideoID(string $videoID): self
     {
         $self = clone $this;
         $self['videoID'] = $videoID;
+
+        return $self;
+    }
+
+    /**
+     * Exact, case-sensitive video title. Selects views by the title on their first retained start; event lists match each event's own value. Views without a title do not match. Reports with this filter read one stored row per view.
+     */
+    public function withVideoTitle(string $videoTitle): self
+    {
+        $self = clone $this;
+        $self['videoTitle'] = $videoTitle;
 
         return $self;
     }
@@ -416,7 +496,7 @@ final class ViewListParams implements BaseModel
     }
 
     /**
-     * Exact supplied viewer ID. Missing/null viewer IDs do not match.
+     * Exact viewer ID. The Chunkify player SDK generates one per browser; missing/null viewer IDs do not match.
      */
     public function withViewerID(string $viewerID): self
     {
