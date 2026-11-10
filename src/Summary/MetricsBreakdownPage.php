@@ -14,7 +14,7 @@ use ChunkifyAnalytics\Summary\MetricsBreakdownPage\GroupBy;
  * @phpstan-import-type GroupShape from \ChunkifyAnalytics\Summary\MetricsBreakdownPage\Group
  *
  * @phpstan-type MetricsBreakdownPageShape = array{
- *   groupBy: GroupBy|value-of<GroupBy>,
+ *   groupBy: string|GroupBy|value-of<GroupBy>,
  *   groups: list<Group|GroupShape>,
  *   nextCursor: string|null,
  * }
@@ -24,7 +24,11 @@ final class MetricsBreakdownPage implements BaseModel
     /** @use SdkModel<MetricsBreakdownPageShape> */
     use SdkModel;
 
-    /** @var value-of<GroupBy> $groupBy */
+    /**
+     * A custom dimension key, such as custom.plan.
+     *
+     * @var string|value-of<GroupBy> $groupBy
+     */
     #[Required('group_by', enum: GroupBy::class)]
     public string $groupBy;
 
@@ -62,7 +66,7 @@ final class MetricsBreakdownPage implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param GroupBy|value-of<GroupBy> $groupBy
+     * @param string|GroupBy|value-of<GroupBy> $groupBy
      * @param list<Group|GroupShape> $groups
      */
     public static function with(
@@ -80,7 +84,9 @@ final class MetricsBreakdownPage implements BaseModel
     }
 
     /**
-     * @param GroupBy|value-of<GroupBy> $groupBy
+     * A custom dimension key, such as custom.plan.
+     *
+     * @param string|GroupBy|value-of<GroupBy> $groupBy
      */
     public function withGroupBy(GroupBy|string $groupBy): self
     {

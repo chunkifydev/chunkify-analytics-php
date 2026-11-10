@@ -12,7 +12,9 @@ use ChunkifyAnalytics\Core\Omit;
 
 /**
  * @phpstan-import-type RenditionPlayingTimeShape from \ChunkifyAnalytics\RenditionPlayingTime
+ * @phpstan-import-type PlaybackRatePlayingTimeShape from \ChunkifyAnalytics\PlaybackRatePlayingTime
  * @phpstan-import-type PlayedRangeShape from \ChunkifyAnalytics\PlayedRange
+ * @phpstan-import-type SubtitlePlayingTimeShape from \ChunkifyAnalytics\SubtitlePlayingTime
  *
  * @phpstan-type ViewMetricsShape = array{
  *   deliveryRequestCount: float|null,
@@ -41,8 +43,12 @@ use ChunkifyAnalytics\Core\Omit;
  *   selectedRenditionWidth: float|null,
  *   startupTimeMs: float|null,
  *   totalVideoFrames: float|null,
+ *   playbackRate?: float|null,
+ *   playbackRatePlayingTime?: list<PlaybackRatePlayingTime|PlaybackRatePlayingTimeShape>|null,
  *   playedRanges?: list<PlayedRange|PlayedRangeShape>|null,
  *   playheadSeconds?: float|null,
+ *   subtitleLanguage?: string|null,
+ *   subtitlePlayingTime?: list<SubtitlePlayingTime|SubtitlePlayingTimeShape>|null,
  * }
  */
 final class ViewMetrics implements BaseModel
@@ -130,6 +136,24 @@ final class ViewMetrics implements BaseModel
     public ?float $totalVideoFrames;
 
     /**
+     * Current playback rate, rounded to two decimals, such as 1, 1.5 or 2; from 0.01 to 16. Optional.
+     */
+    #[Optional('playback_rate', nullable: true)]
+    public ?float $playbackRate;
+
+    /**
+     * Cumulative playing time per playback rate for this attempt. At most 32 entries. Optional.
+     *
+     * @var list<PlaybackRatePlayingTime>|null $playbackRatePlayingTime
+     */
+    #[Optional(
+        'playback_rate_playing_time',
+        list: PlaybackRatePlayingTime::class,
+        nullable: true,
+    )]
+    public ?array $playbackRatePlayingTime;
+
+    /**
      * Cumulative played media ranges for this attempt, sorted and merged without overlaps. Seeking, pauses and buffering are excluded. Missing or null means unavailable; an empty array means measured but no section played. Replaying a section does not add another range.
      *
      * @var list<PlayedRange>|null $playedRanges
@@ -142,6 +166,24 @@ final class ViewMetrics implements BaseModel
      */
     #[Optional('playhead_seconds', nullable: true)]
     public ?float $playheadSeconds;
+
+    /**
+     * Language tag (BCP 47) of the showing subtitles or captions track; und when the track declares no language; null when subtitles are off. Optional.
+     */
+    #[Optional('subtitle_language', nullable: true)]
+    public ?string $subtitleLanguage;
+
+    /**
+     * Cumulative playing time per subtitle language for this attempt, null language meaning subtitles off. At most 32 entries. Optional.
+     *
+     * @var list<SubtitlePlayingTime>|null $subtitlePlayingTime
+     */
+    #[Optional(
+        'subtitle_playing_time',
+        list: SubtitlePlayingTime::class,
+        nullable: true
+    )]
+    public ?array $subtitlePlayingTime;
 
     /**
      * `new ViewMetrics()` is missing required properties by the API.
@@ -221,7 +263,9 @@ final class ViewMetrics implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<RenditionPlayingTime|RenditionPlayingTimeShape>|null $renditionPlayingTime
+     * @param list<PlaybackRatePlayingTime|PlaybackRatePlayingTimeShape>|Omit|null $playbackRatePlayingTime
      * @param list<PlayedRange|PlayedRangeShape>|Omit|null $playedRanges
+     * @param list<SubtitlePlayingTime|SubtitlePlayingTimeShape>|Omit|null $subtitlePlayingTime
      */
     public static function with(
         ?float $deliveryRequestCount,
@@ -250,8 +294,12 @@ final class ViewMetrics implements BaseModel
         ?float $selectedRenditionWidth,
         ?float $startupTimeMs,
         ?float $totalVideoFrames,
+        float|Omit|null $playbackRate = Omit::Value,
+        array|Omit|null $playbackRatePlayingTime = Omit::Value,
         array|Omit|null $playedRanges = Omit::Value,
         float|Omit|null $playheadSeconds = Omit::Value,
+        string|Omit|null $subtitleLanguage = Omit::Value,
+        array|Omit|null $subtitlePlayingTime = Omit::Value,
     ): self {
         $self = new self;
 
@@ -282,8 +330,12 @@ final class ViewMetrics implements BaseModel
         $self['startupTimeMs'] = $startupTimeMs;
         $self['totalVideoFrames'] = $totalVideoFrames;
 
+        Omit::Value !== $playbackRate && $self['playbackRate'] = $playbackRate;
+        Omit::Value !== $playbackRatePlayingTime && $self['playbackRatePlayingTime'] = $playbackRatePlayingTime;
         Omit::Value !== $playedRanges && $self['playedRanges'] = $playedRanges;
         Omit::Value !== $playheadSeconds && $self['playheadSeconds'] = $playheadSeconds;
+        Omit::Value !== $subtitleLanguage && $self['subtitleLanguage'] = $subtitleLanguage;
+        Omit::Value !== $subtitlePlayingTime && $self['subtitlePlayingTime'] = $subtitlePlayingTime;
 
         return $self;
     }
@@ -509,6 +561,31 @@ final class ViewMetrics implements BaseModel
     }
 
     /**
+     * Current playback rate, rounded to two decimals, such as 1, 1.5 or 2; from 0.01 to 16. Optional.
+     */
+    public function withPlaybackRate(?float $playbackRate): self
+    {
+        $self = clone $this;
+        $self['playbackRate'] = $playbackRate;
+
+        return $self;
+    }
+
+    /**
+     * Cumulative playing time per playback rate for this attempt. At most 32 entries. Optional.
+     *
+     * @param list<PlaybackRatePlayingTime|PlaybackRatePlayingTimeShape>|null $playbackRatePlayingTime
+     */
+    public function withPlaybackRatePlayingTime(
+        ?array $playbackRatePlayingTime
+    ): self {
+        $self = clone $this;
+        $self['playbackRatePlayingTime'] = $playbackRatePlayingTime;
+
+        return $self;
+    }
+
+    /**
      * Cumulative played media ranges for this attempt, sorted and merged without overlaps. Seeking, pauses and buffering are excluded. Missing or null means unavailable; an empty array means measured but no section played. Replaying a section does not add another range.
      *
      * @param list<PlayedRange|PlayedRangeShape>|null $playedRanges
@@ -528,6 +605,30 @@ final class ViewMetrics implements BaseModel
     {
         $self = clone $this;
         $self['playheadSeconds'] = $playheadSeconds;
+
+        return $self;
+    }
+
+    /**
+     * Language tag (BCP 47) of the showing subtitles or captions track; und when the track declares no language; null when subtitles are off. Optional.
+     */
+    public function withSubtitleLanguage(?string $subtitleLanguage): self
+    {
+        $self = clone $this;
+        $self['subtitleLanguage'] = $subtitleLanguage;
+
+        return $self;
+    }
+
+    /**
+     * Cumulative playing time per subtitle language for this attempt, null language meaning subtitles off. At most 32 entries. Optional.
+     *
+     * @param list<SubtitlePlayingTime|SubtitlePlayingTimeShape>|null $subtitlePlayingTime
+     */
+    public function withSubtitlePlayingTime(?array $subtitlePlayingTime): self
+    {
+        $self = clone $this;
+        $self['subtitlePlayingTime'] = $subtitlePlayingTime;
 
         return $self;
     }
