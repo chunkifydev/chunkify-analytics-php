@@ -12,28 +12,28 @@ use ChunkifyAnalytics\Core\Contracts\BaseModel;
 use ChunkifyAnalytics\Core\Omit;
 
 /**
- * Browser and device information reported by the player. Unavailable measurements are null.
+ * Browser and device information. The Chunkify player sends every field, with null for unavailable measurements. Other integrations may omit any field except schema_version. Extra properties are preserved.
  *
  * @phpstan-type BrowserContextShape = array{
- *   browserName: string|null,
- *   browserVersion: string|null,
- *   deviceFamily: string|null,
- *   deviceType: DeviceType|value-of<DeviceType>,
- *   language: string|null,
- *   languagePrefix: string|null,
- *   osName: string|null,
- *   osVersion: string|null,
- *   pixelRatio: float|null,
  *   schemaVersion: 1,
- *   screenHeightPx: int|null,
- *   screenWidthPx: int|null,
- *   timezone: string|null,
- *   timezoneOffsetMinutes: int|null,
- *   userAgent: string|null,
- *   viewportHeightPx: int|null,
- *   viewportWidthPx: int|null,
+ *   browserName?: string|null,
+ *   browserVersion?: string|null,
+ *   deviceFamily?: string|null,
+ *   deviceType?: null|DeviceType|value-of<DeviceType>,
+ *   language?: string|null,
+ *   languagePrefix?: string|null,
+ *   osName?: string|null,
+ *   osVersion?: string|null,
  *   pageOrigin?: string|null,
  *   pagePath?: string|null,
+ *   pixelRatio?: float|null,
+ *   screenHeightPx?: int|null,
+ *   screenWidthPx?: int|null,
+ *   timezone?: string|null,
+ *   timezoneOffsetMinutes?: int|null,
+ *   userAgent?: string|null,
+ *   viewportHeightPx?: int|null,
+ *   viewportWidthPx?: int|null,
  * }
  */
 final class BrowserContext implements BaseModel
@@ -45,54 +45,30 @@ final class BrowserContext implements BaseModel
     #[Required('schema_version')]
     public int $schemaVersion = 1;
 
-    #[Required('browser_name')]
+    #[Optional('browser_name', nullable: true)]
     public ?string $browserName;
 
-    #[Required('browser_version')]
+    #[Optional('browser_version', nullable: true)]
     public ?string $browserVersion;
 
-    #[Required('device_family')]
+    #[Optional('device_family', nullable: true)]
     public ?string $deviceFamily;
 
-    /** @var value-of<DeviceType> $deviceType */
-    #[Required('device_type', enum: DeviceType::class)]
-    public string $deviceType;
+    /** @var value-of<DeviceType>|null $deviceType */
+    #[Optional('device_type', enum: DeviceType::class)]
+    public ?string $deviceType;
 
-    #[Required]
+    #[Optional(nullable: true)]
     public ?string $language;
 
-    #[Required('language_prefix')]
+    #[Optional('language_prefix', nullable: true)]
     public ?string $languagePrefix;
 
-    #[Required('os_name')]
+    #[Optional('os_name', nullable: true)]
     public ?string $osName;
 
-    #[Required('os_version')]
+    #[Optional('os_version', nullable: true)]
     public ?string $osVersion;
-
-    #[Required('pixel_ratio')]
-    public ?float $pixelRatio;
-
-    #[Required('screen_height_px')]
-    public ?int $screenHeightPx;
-
-    #[Required('screen_width_px')]
-    public ?int $screenWidthPx;
-
-    #[Required]
-    public ?string $timezone;
-
-    #[Required('timezone_offset_minutes')]
-    public ?int $timezoneOffsetMinutes;
-
-    #[Required('user_agent')]
-    public ?string $userAgent;
-
-    #[Required('viewport_height_px')]
-    public ?int $viewportHeightPx;
-
-    #[Required('viewport_width_px')]
-    public ?int $viewportWidthPx;
 
     /**
      * Current document HTTP(S) origin, without credentials. Null when unavailable or longer than 2048 characters.
@@ -106,53 +82,30 @@ final class BrowserContext implements BaseModel
     #[Optional('page_path', nullable: true)]
     public ?string $pagePath;
 
-    /**
-     * `new BrowserContext()` is missing required properties by the API.
-     *
-     * To enforce required parameters use
-     * ```
-     * BrowserContext::with(
-     *   browserName: ...,
-     *   browserVersion: ...,
-     *   deviceFamily: ...,
-     *   deviceType: ...,
-     *   language: ...,
-     *   languagePrefix: ...,
-     *   osName: ...,
-     *   osVersion: ...,
-     *   pixelRatio: ...,
-     *   screenHeightPx: ...,
-     *   screenWidthPx: ...,
-     *   timezone: ...,
-     *   timezoneOffsetMinutes: ...,
-     *   userAgent: ...,
-     *   viewportHeightPx: ...,
-     *   viewportWidthPx: ...,
-     * )
-     * ```
-     *
-     * Otherwise ensure the following setters are called
-     *
-     * ```
-     * (new BrowserContext)
-     *   ->withBrowserName(...)
-     *   ->withBrowserVersion(...)
-     *   ->withDeviceFamily(...)
-     *   ->withDeviceType(...)
-     *   ->withLanguage(...)
-     *   ->withLanguagePrefix(...)
-     *   ->withOsName(...)
-     *   ->withOsVersion(...)
-     *   ->withPixelRatio(...)
-     *   ->withScreenHeightPx(...)
-     *   ->withScreenWidthPx(...)
-     *   ->withTimezone(...)
-     *   ->withTimezoneOffsetMinutes(...)
-     *   ->withUserAgent(...)
-     *   ->withViewportHeightPx(...)
-     *   ->withViewportWidthPx(...)
-     * ```
-     */
+    #[Optional('pixel_ratio', nullable: true)]
+    public ?float $pixelRatio;
+
+    #[Optional('screen_height_px', nullable: true)]
+    public ?int $screenHeightPx;
+
+    #[Optional('screen_width_px', nullable: true)]
+    public ?int $screenWidthPx;
+
+    #[Optional(nullable: true)]
+    public ?string $timezone;
+
+    #[Optional('timezone_offset_minutes', nullable: true)]
+    public ?int $timezoneOffsetMinutes;
+
+    #[Optional('user_agent', nullable: true)]
+    public ?string $userAgent;
+
+    #[Optional('viewport_height_px', nullable: true)]
+    public ?int $viewportHeightPx;
+
+    #[Optional('viewport_width_px', nullable: true)]
+    public ?int $viewportWidthPx;
+
     public function __construct()
     {
         $this->initialize();
@@ -163,49 +116,59 @@ final class BrowserContext implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param DeviceType|value-of<DeviceType> $deviceType
+     * @param DeviceType|value-of<DeviceType>|null $deviceType
      */
     public static function with(
-        ?string $browserName,
-        ?string $browserVersion,
-        ?string $deviceFamily,
-        DeviceType|string $deviceType,
-        ?string $language,
-        ?string $languagePrefix,
-        ?string $osName,
-        ?string $osVersion,
-        ?float $pixelRatio,
-        ?int $screenHeightPx,
-        ?int $screenWidthPx,
-        ?string $timezone,
-        ?int $timezoneOffsetMinutes,
-        ?string $userAgent,
-        ?int $viewportHeightPx,
-        ?int $viewportWidthPx,
+        string|Omit|null $browserName = Omit::Value,
+        string|Omit|null $browserVersion = Omit::Value,
+        string|Omit|null $deviceFamily = Omit::Value,
+        DeviceType|string|null $deviceType = null,
+        string|Omit|null $language = Omit::Value,
+        string|Omit|null $languagePrefix = Omit::Value,
+        string|Omit|null $osName = Omit::Value,
+        string|Omit|null $osVersion = Omit::Value,
         string|Omit|null $pageOrigin = Omit::Value,
         string|Omit|null $pagePath = Omit::Value,
+        float|Omit|null $pixelRatio = Omit::Value,
+        int|Omit|null $screenHeightPx = Omit::Value,
+        int|Omit|null $screenWidthPx = Omit::Value,
+        string|Omit|null $timezone = Omit::Value,
+        int|Omit|null $timezoneOffsetMinutes = Omit::Value,
+        string|Omit|null $userAgent = Omit::Value,
+        int|Omit|null $viewportHeightPx = Omit::Value,
+        int|Omit|null $viewportWidthPx = Omit::Value,
     ): self {
         $self = new self;
 
-        $self['browserName'] = $browserName;
-        $self['browserVersion'] = $browserVersion;
-        $self['deviceFamily'] = $deviceFamily;
-        $self['deviceType'] = $deviceType;
-        $self['language'] = $language;
-        $self['languagePrefix'] = $languagePrefix;
-        $self['osName'] = $osName;
-        $self['osVersion'] = $osVersion;
-        $self['pixelRatio'] = $pixelRatio;
-        $self['screenHeightPx'] = $screenHeightPx;
-        $self['screenWidthPx'] = $screenWidthPx;
-        $self['timezone'] = $timezone;
-        $self['timezoneOffsetMinutes'] = $timezoneOffsetMinutes;
-        $self['userAgent'] = $userAgent;
-        $self['viewportHeightPx'] = $viewportHeightPx;
-        $self['viewportWidthPx'] = $viewportWidthPx;
-
+        Omit::Value !== $browserName && $self['browserName'] = $browserName;
+        Omit::Value !== $browserVersion && $self['browserVersion'] = $browserVersion;
+        Omit::Value !== $deviceFamily && $self['deviceFamily'] = $deviceFamily;
+        null !== $deviceType && $self['deviceType'] = $deviceType;
+        Omit::Value !== $language && $self['language'] = $language;
+        Omit::Value !== $languagePrefix && $self['languagePrefix'] = $languagePrefix;
+        Omit::Value !== $osName && $self['osName'] = $osName;
+        Omit::Value !== $osVersion && $self['osVersion'] = $osVersion;
         Omit::Value !== $pageOrigin && $self['pageOrigin'] = $pageOrigin;
         Omit::Value !== $pagePath && $self['pagePath'] = $pagePath;
+        Omit::Value !== $pixelRatio && $self['pixelRatio'] = $pixelRatio;
+        Omit::Value !== $screenHeightPx && $self['screenHeightPx'] = $screenHeightPx;
+        Omit::Value !== $screenWidthPx && $self['screenWidthPx'] = $screenWidthPx;
+        Omit::Value !== $timezone && $self['timezone'] = $timezone;
+        Omit::Value !== $timezoneOffsetMinutes && $self['timezoneOffsetMinutes'] = $timezoneOffsetMinutes;
+        Omit::Value !== $userAgent && $self['userAgent'] = $userAgent;
+        Omit::Value !== $viewportHeightPx && $self['viewportHeightPx'] = $viewportHeightPx;
+        Omit::Value !== $viewportWidthPx && $self['viewportWidthPx'] = $viewportWidthPx;
+
+        return $self;
+    }
+
+    /**
+     * @param 1 $schemaVersion
+     */
+    public function withSchemaVersion(int $schemaVersion): self
+    {
+        $self = clone $this;
+        $self['schemaVersion'] = $schemaVersion;
 
         return $self;
     }
@@ -277,21 +240,32 @@ final class BrowserContext implements BaseModel
         return $self;
     }
 
-    public function withPixelRatio(?float $pixelRatio): self
+    /**
+     * Current document HTTP(S) origin, without credentials. Null when unavailable or longer than 2048 characters.
+     */
+    public function withPageOrigin(?string $pageOrigin): self
     {
         $self = clone $this;
-        $self['pixelRatio'] = $pixelRatio;
+        $self['pageOrigin'] = $pageOrigin;
 
         return $self;
     }
 
     /**
-     * @param 1 $schemaVersion
+     * Current document pathname, without query parameters or fragment. Null when unavailable or longer than 2048 characters. Paths may contain application-defined identifiers.
      */
-    public function withSchemaVersion(int $schemaVersion): self
+    public function withPagePath(?string $pagePath): self
     {
         $self = clone $this;
-        $self['schemaVersion'] = $schemaVersion;
+        $self['pagePath'] = $pagePath;
+
+        return $self;
+    }
+
+    public function withPixelRatio(?float $pixelRatio): self
+    {
+        $self = clone $this;
+        $self['pixelRatio'] = $pixelRatio;
 
         return $self;
     }
@@ -348,28 +322,6 @@ final class BrowserContext implements BaseModel
     {
         $self = clone $this;
         $self['viewportWidthPx'] = $viewportWidthPx;
-
-        return $self;
-    }
-
-    /**
-     * Current document HTTP(S) origin, without credentials. Null when unavailable or longer than 2048 characters.
-     */
-    public function withPageOrigin(?string $pageOrigin): self
-    {
-        $self = clone $this;
-        $self['pageOrigin'] = $pageOrigin;
-
-        return $self;
-    }
-
-    /**
-     * Current document pathname, without query parameters or fragment. Null when unavailable or longer than 2048 characters. Paths may contain application-defined identifiers.
-     */
-    public function withPagePath(?string $pagePath): self
-    {
-        $self = clone $this;
-        $self['pagePath'] = $pagePath;
 
         return $self;
     }
