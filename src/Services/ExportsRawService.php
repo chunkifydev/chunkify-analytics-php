@@ -105,7 +105,7 @@ final class ExportsRawService implements ExportsRawContract
      *
      * @param array{
      *   resource: value-of<ExportListColumnsParams\Resource>,
-     *   groupBy?: value-of<GroupBy>,
+     *   groupBy?: string|GroupBy|value-of<GroupBy>,
      *   kind?: Kind|value-of<Kind>,
      * }|ExportListColumnsParams $params
      * @param RequestOpts|null $requestOptions

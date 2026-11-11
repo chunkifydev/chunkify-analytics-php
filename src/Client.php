@@ -14,10 +14,12 @@ use ChunkifyAnalytics\Services\ErrorsService;
 use ChunkifyAnalytics\Services\EventsService;
 use ChunkifyAnalytics\Services\ExportsService;
 use ChunkifyAnalytics\Services\HealthService;
+use ChunkifyAnalytics\Services\PlaybackRatesService;
 use ChunkifyAnalytics\Services\ProjectService;
 use ChunkifyAnalytics\Services\QualityService;
 use ChunkifyAnalytics\Services\RenditionsService;
 use ChunkifyAnalytics\Services\RetentionService;
+use ChunkifyAnalytics\Services\SubtitlesService;
 use ChunkifyAnalytics\Services\SummaryService;
 use ChunkifyAnalytics\Services\TimeseriesService;
 use ChunkifyAnalytics\Services\VideosService;
@@ -113,6 +115,16 @@ class Client extends BaseClient
     public RenditionsService $renditions;
 
     /**
+     * @api
+     */
+    public SubtitlesService $subtitles;
+
+    /**
+     * @api
+     */
+    public PlaybackRatesService $playbackRates;
+
+    /**
      * @param RequestOpts|null $requestOptions
      */
     public function __construct(
@@ -195,6 +207,8 @@ class Client extends BaseClient
         $this->exports = new ExportsService($this);
         $this->retention = new RetentionService($this);
         $this->renditions = new RenditionsService($this);
+        $this->subtitles = new SubtitlesService($this);
+        $this->playbackRates = new PlaybackRatesService($this);
     }
 
     /**
