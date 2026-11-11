@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ChunkifyAnalytics\Events;
 
+use ChunkifyAnalytics\BrowserContext;
 use ChunkifyAnalytics\Core\Attributes\Optional;
 use ChunkifyAnalytics\Core\Attributes\Required;
 use ChunkifyAnalytics\Core\Concerns\SdkModel;
@@ -21,6 +22,7 @@ use ChunkifyAnalytics\RenditionPlayingTime;
 /**
  * @phpstan-import-type ErrorCodeVariants from \ChunkifyAnalytics\Events\SeekCompleted\ErrorCode
  * @phpstan-import-type ErrorCodeShape from \ChunkifyAnalytics\Events\SeekCompleted\ErrorCode
+ * @phpstan-import-type BrowserContextShape from \ChunkifyAnalytics\BrowserContext
  * @phpstan-import-type RenditionPlayingTimeShape from \ChunkifyAnalytics\RenditionPlayingTime
  *
  * @phpstan-type SeekCompletedShape = array{
@@ -56,7 +58,7 @@ use ChunkifyAnalytics\RenditionPlayingTime;
  *   videoID: string,
  *   viewID: string,
  *   viewerID: string|null,
- *   browserContext?: mixed,
+ *   browserContext?: null|BrowserContext|BrowserContextShape,
  *   deliveryRequestCount?: float|null,
  *   deliveryThroughputBps?: float|null,
  *   deliveryTransferredBytes?: float|null,
@@ -205,10 +207,10 @@ final class SeekCompleted implements BaseModel
     public ?string $viewerID;
 
     /**
-     * Optional browser information supplied by the player.
+     * Browser and device information. The Chunkify player sends every field, with null for unavailable measurements. Other integrations may omit any field except schema_version. Extra properties are preserved.
      */
-    #[Optional('browser_context')]
-    public mixed $browserContext;
+    #[Optional('browser_context', nullable: true)]
+    public ?BrowserContext $browserContext;
 
     #[Optional('delivery_request_count', nullable: true)]
     public ?float $deliveryRequestCount;
@@ -405,6 +407,7 @@ final class SeekCompleted implements BaseModel
      * @param StartupOutcome|value-of<StartupOutcome>|null $startupOutcome
      * @param StateAfterSeek|value-of<StateAfterSeek> $stateAfterSeek
      * @param StateBeforeSeek|value-of<StateBeforeSeek> $stateBeforeSeek
+     * @param Omit|BrowserContext|BrowserContextShape|null $browserContext
      * @param list<RenditionPlayingTime|RenditionPlayingTimeShape>|Omit|null $renditionPlayingTime
      * @param Omit|VisibilityState|value-of<VisibilityState>|null $visibilityState
      */
@@ -439,7 +442,7 @@ final class SeekCompleted implements BaseModel
         string $videoID,
         string $viewID,
         ?string $viewerID,
-        mixed $browserContext = null,
+        Omit|BrowserContext|array|null $browserContext = Omit::Value,
         float|Omit|null $deliveryRequestCount = Omit::Value,
         float|Omit|null $deliveryThroughputBps = Omit::Value,
         float|Omit|null $deliveryTransferredBytes = Omit::Value,
@@ -503,7 +506,7 @@ final class SeekCompleted implements BaseModel
         $self['viewID'] = $viewID;
         $self['viewerID'] = $viewerID;
 
-        null !== $browserContext && $self['browserContext'] = $browserContext;
+        Omit::Value !== $browserContext && $self['browserContext'] = $browserContext;
         Omit::Value !== $deliveryRequestCount && $self['deliveryRequestCount'] = $deliveryRequestCount;
         Omit::Value !== $deliveryThroughputBps && $self['deliveryThroughputBps'] = $deliveryThroughputBps;
         Omit::Value !== $deliveryTransferredBytes && $self['deliveryTransferredBytes'] = $deliveryTransferredBytes;
@@ -833,10 +836,13 @@ final class SeekCompleted implements BaseModel
     }
 
     /**
-     * Optional browser information supplied by the player.
+     * Browser and device information. The Chunkify player sends every field, with null for unavailable measurements. Other integrations may omit any field except schema_version. Extra properties are preserved.
+     *
+     * @param BrowserContext|BrowserContextShape|null $browserContext
      */
-    public function withBrowserContext(mixed $browserContext): self
-    {
+    public function withBrowserContext(
+        BrowserContext|array|null $browserContext
+    ): self {
         $self = clone $this;
         $self['browserContext'] = $browserContext;
 

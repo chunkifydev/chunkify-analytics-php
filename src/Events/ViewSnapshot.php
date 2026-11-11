@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ChunkifyAnalytics\Events;
 
+use ChunkifyAnalytics\BrowserContext;
 use ChunkifyAnalytics\Core\Attributes\Optional;
 use ChunkifyAnalytics\Core\Attributes\Required;
 use ChunkifyAnalytics\Core\Concerns\SdkModel;
@@ -22,6 +23,7 @@ use ChunkifyAnalytics\SubtitlePlayingTime;
  * @phpstan-import-type ErrorCodeVariants from \ChunkifyAnalytics\Events\ViewSnapshot\ErrorCode
  * @phpstan-import-type ErrorCodeShape from \ChunkifyAnalytics\Events\ViewSnapshot\ErrorCode
  * @phpstan-import-type RenditionPlayingTimeShape from \ChunkifyAnalytics\RenditionPlayingTime
+ * @phpstan-import-type BrowserContextShape from \ChunkifyAnalytics\BrowserContext
  * @phpstan-import-type PlaybackRatePlayingTimeShape from \ChunkifyAnalytics\PlaybackRatePlayingTime
  * @phpstan-import-type PlayedRangeShape from \ChunkifyAnalytics\PlayedRange
  * @phpstan-import-type SubtitlePlayingTimeShape from \ChunkifyAnalytics\SubtitlePlayingTime
@@ -75,7 +77,7 @@ use ChunkifyAnalytics\SubtitlePlayingTime;
  *   videoID: string,
  *   viewID: string,
  *   viewerID: string|null,
- *   browserContext?: mixed,
+ *   browserContext?: null|BrowserContext|BrowserContextShape,
  *   playbackRate?: float|null,
  *   playbackRatePlayingTime?: list<PlaybackRatePlayingTime|PlaybackRatePlayingTimeShape>|null,
  *   playedRanges?: list<PlayedRange|PlayedRangeShape>|null,
@@ -250,10 +252,10 @@ final class ViewSnapshot implements BaseModel
     public ?string $viewerID;
 
     /**
-     * Optional browser information supplied by the player.
+     * Browser and device information. The Chunkify player sends every field, with null for unavailable measurements. Other integrations may omit any field except schema_version. Extra properties are preserved.
      */
-    #[Optional('browser_context')]
-    public mixed $browserContext;
+    #[Optional('browser_context', nullable: true)]
+    public ?BrowserContext $browserContext;
 
     /**
      * Current playback rate, rounded to two decimals, such as 1, 1.5 or 2; from 0.01 to 16. Optional.
@@ -447,6 +449,7 @@ final class ViewSnapshot implements BaseModel
      * @param Reason|value-of<Reason>|null $reason
      * @param list<RenditionPlayingTime|RenditionPlayingTimeShape>|null $renditionPlayingTime
      * @param StartupOutcome|value-of<StartupOutcome>|null $startupOutcome
+     * @param Omit|BrowserContext|BrowserContextShape|null $browserContext
      * @param list<PlaybackRatePlayingTime|PlaybackRatePlayingTimeShape>|Omit|null $playbackRatePlayingTime
      * @param list<PlayedRange|PlayedRangeShape>|Omit|null $playedRanges
      * @param list<SubtitlePlayingTime|SubtitlePlayingTimeShape>|Omit|null $subtitlePlayingTime
@@ -499,7 +502,7 @@ final class ViewSnapshot implements BaseModel
         string $videoID,
         string $viewID,
         ?string $viewerID,
-        mixed $browserContext = null,
+        Omit|BrowserContext|array|null $browserContext = Omit::Value,
         float|Omit|null $playbackRate = Omit::Value,
         array|Omit|null $playbackRatePlayingTime = Omit::Value,
         array|Omit|null $playedRanges = Omit::Value,
@@ -559,7 +562,7 @@ final class ViewSnapshot implements BaseModel
         $self['viewID'] = $viewID;
         $self['viewerID'] = $viewerID;
 
-        null !== $browserContext && $self['browserContext'] = $browserContext;
+        Omit::Value !== $browserContext && $self['browserContext'] = $browserContext;
         Omit::Value !== $playbackRate && $self['playbackRate'] = $playbackRate;
         Omit::Value !== $playbackRatePlayingTime && $self['playbackRatePlayingTime'] = $playbackRatePlayingTime;
         Omit::Value !== $playedRanges && $self['playedRanges'] = $playedRanges;
@@ -996,10 +999,13 @@ final class ViewSnapshot implements BaseModel
     }
 
     /**
-     * Optional browser information supplied by the player.
+     * Browser and device information. The Chunkify player sends every field, with null for unavailable measurements. Other integrations may omit any field except schema_version. Extra properties are preserved.
+     *
+     * @param BrowserContext|BrowserContextShape|null $browserContext
      */
-    public function withBrowserContext(mixed $browserContext): self
-    {
+    public function withBrowserContext(
+        BrowserContext|array|null $browserContext
+    ): self {
         $self = clone $this;
         $self['browserContext'] = $browserContext;
 

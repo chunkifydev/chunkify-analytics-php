@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ChunkifyAnalytics\Events;
 
+use ChunkifyAnalytics\BrowserContext;
 use ChunkifyAnalytics\Core\Attributes\Optional;
 use ChunkifyAnalytics\Core\Attributes\Required;
 use ChunkifyAnalytics\Core\Concerns\SdkModel;
@@ -24,6 +25,7 @@ use ChunkifyAnalytics\SubtitlePlayingTime;
  * @phpstan-import-type CustomDimensionItemVariants from \ChunkifyAnalytics\CustomDimensionItem
  * @phpstan-import-type ErrorCodeShape from \ChunkifyAnalytics\Events\ViewStarted\ErrorCode
  * @phpstan-import-type RenditionPlayingTimeShape from \ChunkifyAnalytics\RenditionPlayingTime
+ * @phpstan-import-type BrowserContextShape from \ChunkifyAnalytics\BrowserContext
  * @phpstan-import-type CustomDimensionItemShape from \ChunkifyAnalytics\CustomDimensionItem
  * @phpstan-import-type PlaybackRatePlayingTimeShape from \ChunkifyAnalytics\PlaybackRatePlayingTime
  * @phpstan-import-type PlayedRangeShape from \ChunkifyAnalytics\PlayedRange
@@ -78,7 +80,7 @@ use ChunkifyAnalytics\SubtitlePlayingTime;
  *   videoID: string,
  *   viewID: string,
  *   viewerID: string|null,
- *   browserContext?: mixed,
+ *   browserContext?: null|BrowserContext|BrowserContextShape,
  *   custom?: array<string,CustomDimensionItemShape>|null,
  *   playbackRate?: float|null,
  *   playbackRatePlayingTime?: list<PlaybackRatePlayingTime|PlaybackRatePlayingTimeShape>|null,
@@ -254,10 +256,10 @@ final class ViewStarted implements BaseModel
     public ?string $viewerID;
 
     /**
-     * Optional browser information supplied by the player.
+     * Browser and device information. The Chunkify player sends every field, with null for unavailable measurements. Other integrations may omit any field except schema_version. Extra properties are preserved.
      */
-    #[Optional('browser_context')]
-    public mixed $browserContext;
+    #[Optional('browser_context', nullable: true)]
+    public ?BrowserContext $browserContext;
 
     /**
      * Integrator-defined dimensions set once when the view starts: at most 10 keys of 1 to 40 characters a-z, 0-9 and _, each with text of 1 to 256 characters, a number or a boolean. Reports compare values as text, exactly and case-sensitively: numbers as their JSON text (5, 5.5; send whole numbers without a decimal part, as JavaScript does), booleans as true or false. Only view_started accepts custom. Never put personal data here; use user_id for user identity.
@@ -459,6 +461,7 @@ final class ViewStarted implements BaseModel
      * @param Reason|value-of<Reason>|null $reason
      * @param list<RenditionPlayingTime|RenditionPlayingTimeShape>|null $renditionPlayingTime
      * @param StartupOutcome|value-of<StartupOutcome>|null $startupOutcome
+     * @param Omit|BrowserContext|BrowserContextShape|null $browserContext
      * @param array<string,CustomDimensionItemShape>|null $custom
      * @param list<PlaybackRatePlayingTime|PlaybackRatePlayingTimeShape>|Omit|null $playbackRatePlayingTime
      * @param list<PlayedRange|PlayedRangeShape>|Omit|null $playedRanges
@@ -512,7 +515,7 @@ final class ViewStarted implements BaseModel
         string $videoID,
         string $viewID,
         ?string $viewerID,
-        mixed $browserContext = null,
+        Omit|BrowserContext|array|null $browserContext = Omit::Value,
         ?array $custom = null,
         float|Omit|null $playbackRate = Omit::Value,
         array|Omit|null $playbackRatePlayingTime = Omit::Value,
@@ -573,7 +576,7 @@ final class ViewStarted implements BaseModel
         $self['viewID'] = $viewID;
         $self['viewerID'] = $viewerID;
 
-        null !== $browserContext && $self['browserContext'] = $browserContext;
+        Omit::Value !== $browserContext && $self['browserContext'] = $browserContext;
         null !== $custom && $self['custom'] = $custom;
         Omit::Value !== $playbackRate && $self['playbackRate'] = $playbackRate;
         Omit::Value !== $playbackRatePlayingTime && $self['playbackRatePlayingTime'] = $playbackRatePlayingTime;
@@ -1011,10 +1014,13 @@ final class ViewStarted implements BaseModel
     }
 
     /**
-     * Optional browser information supplied by the player.
+     * Browser and device information. The Chunkify player sends every field, with null for unavailable measurements. Other integrations may omit any field except schema_version. Extra properties are preserved.
+     *
+     * @param BrowserContext|BrowserContextShape|null $browserContext
      */
-    public function withBrowserContext(mixed $browserContext): self
-    {
+    public function withBrowserContext(
+        BrowserContext|array|null $browserContext
+    ): self {
         $self = clone $this;
         $self['browserContext'] = $browserContext;
 
