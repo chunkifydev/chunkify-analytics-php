@@ -37,7 +37,7 @@ final class StoredEvent implements BaseModel
      * @var AnalyticsEventVariants $event
      */
     #[Required]
-    public ViewStarted|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted $event;
+    public ViewStarted|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted|SubtitleChanged|PlaybackRateChanged $event;
 
     /**
      * ID of the public key used to receive this event. Null when unavailable.
@@ -99,7 +99,7 @@ final class StoredEvent implements BaseModel
      * @param StoredOtlpContext|StoredOtlpContextShape|null $otlp
      */
     public static function with(
-        ViewStarted|array|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted $event,
+        ViewStarted|array|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted|SubtitleChanged|PlaybackRateChanged $event,
         ?string $ingestKeyID,
         string $projectID,
         \DateTimeInterface $receivedAt,
@@ -125,7 +125,7 @@ final class StoredEvent implements BaseModel
      * @param AnalyticsEventShape $event
      */
     public function withEvent(
-        ViewStarted|array|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted $event,
+        ViewStarted|array|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted|SubtitleChanged|PlaybackRateChanged $event,
     ): self {
         $self = clone $this;
         $self['event'] = $event;

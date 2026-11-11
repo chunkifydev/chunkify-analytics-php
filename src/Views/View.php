@@ -24,7 +24,9 @@ use ChunkifyAnalytics\PlaybackScore;
  *   rebufferDurationMs: float|null,
  *   startedAt: \DateTimeInterface,
  *   startupTimeMs: float|null,
+ *   userID: string|null,
  *   videoID: string,
+ *   videoTitle: string|null,
  *   viewID: string,
  *   viewerID: string|null,
  * }
@@ -67,8 +69,14 @@ final class View implements BaseModel
     #[Required('startup_time_ms')]
     public ?float $startupTimeMs;
 
+    #[Required('user_id')]
+    public ?string $userID;
+
     #[Required('video_id')]
     public string $videoID;
+
+    #[Required('video_title')]
+    public ?string $videoTitle;
 
     #[Required('view_id')]
     public string $viewID;
@@ -93,7 +101,9 @@ final class View implements BaseModel
      *   rebufferDurationMs: ...,
      *   startedAt: ...,
      *   startupTimeMs: ...,
+     *   userID: ...,
      *   videoID: ...,
+     *   videoTitle: ...,
      *   viewID: ...,
      *   viewerID: ...,
      * )
@@ -114,7 +124,9 @@ final class View implements BaseModel
      *   ->withRebufferDurationMs(...)
      *   ->withStartedAt(...)
      *   ->withStartupTimeMs(...)
+     *   ->withUserID(...)
      *   ->withVideoID(...)
+     *   ->withVideoTitle(...)
      *   ->withViewID(...)
      *   ->withViewerID(...)
      * ```
@@ -143,7 +155,9 @@ final class View implements BaseModel
         ?float $rebufferDurationMs,
         \DateTimeInterface $startedAt,
         ?float $startupTimeMs,
+        ?string $userID,
         string $videoID,
+        ?string $videoTitle,
         string $viewID,
         ?string $viewerID,
     ): self {
@@ -160,7 +174,9 @@ final class View implements BaseModel
         $self['rebufferDurationMs'] = $rebufferDurationMs;
         $self['startedAt'] = $startedAt;
         $self['startupTimeMs'] = $startupTimeMs;
+        $self['userID'] = $userID;
         $self['videoID'] = $videoID;
+        $self['videoTitle'] = $videoTitle;
         $self['viewID'] = $viewID;
         $self['viewerID'] = $viewerID;
 
@@ -258,10 +274,26 @@ final class View implements BaseModel
         return $self;
     }
 
+    public function withUserID(?string $userID): self
+    {
+        $self = clone $this;
+        $self['userID'] = $userID;
+
+        return $self;
+    }
+
     public function withVideoID(string $videoID): self
     {
         $self = clone $this;
         $self['videoID'] = $videoID;
+
+        return $self;
+    }
+
+    public function withVideoTitle(?string $videoTitle): self
+    {
+        $self = clone $this;
+        $self['videoTitle'] = $videoTitle;
 
         return $self;
     }

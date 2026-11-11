@@ -30,10 +30,14 @@ interface ErrorsContract
      * @param string $osName Exact operating-system name, such as macOS. Missing values do not match.
      * @param string $pageOrigin Exact, case-sensitive page origin captured by the player, such as https://example.com. Metrics use the first retained view start; raw events use each event context. Missing values do not match.
      * @param string $pagePath Exact, case-sensitive page path captured by the player, such as /watch/video. Filter by page_origin as well to distinguish identical paths on different sites. Metrics use the first retained view start; raw events use each event context. Missing values do not match.
+     * @param string $playbackRate Playback rate from 0.01 to 16 with at most two decimals, such as 1, 1.5 or 2; 2.0 and 2 are the same rate. Metrics use the rate on the first retained view start; raw events use each event's value.
+     * @param string $subtitleLanguage Exact, case-sensitive, non-blank subtitle language tag, such as fr or en-US; und for a subtitles track without a language. Metrics use the language showing on the first retained view start; raw events use each event's value. Views without subtitles at start do not match.
      * @param \DateTimeInterface $to Exclusive RFC3339 occurrence-time upper bound, with timezone. Summary/video queries apply it to the selected view_started event.
-     * @param string $videoID Exact video ID. Combined with all other filters using AND.
+     * @param string $userID Exact integrator-supplied user ID. Selects views by their start event; event lists match each event's own value. Missing/null user IDs do not match. Reports with this filter read one stored row per view.
+     * @param string $videoID Exact video ID; must not be blank. Combined with all other filters using AND.
+     * @param string $videoTitle Exact, case-sensitive video title. Selects views by the title on their first retained start; event lists match each event's own value. Views without a title do not match. Reports with this filter read one stored row per view.
      * @param string $viewID Filter one playback attempt by view ID. Metrics use its first retained start.
-     * @param string $viewerID Exact supplied viewer ID. Missing/null viewer IDs do not match.
+     * @param string $viewerID Exact viewer ID. The Chunkify player SDK generates one per browser; missing/null viewer IDs do not match.
      * @param RequestOpts|null $requestOptions
      *
      * @return ErrorsPage<ErrorGroup>
@@ -52,8 +56,12 @@ interface ErrorsContract
         ?string $osName = null,
         ?string $pageOrigin = null,
         ?string $pagePath = null,
+        ?string $playbackRate = null,
+        ?string $subtitleLanguage = null,
         ?\DateTimeInterface $to = null,
+        ?string $userID = null,
         ?string $videoID = null,
+        ?string $videoTitle = null,
         ?string $viewID = null,
         ?string $viewerID = null,
         RequestOptions|array|null $requestOptions = null,
