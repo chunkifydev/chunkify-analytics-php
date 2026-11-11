@@ -44,10 +44,10 @@ var_dump($metricsResponse);
 
 ### Value Objects
 
-It is recommended to use the static `with` constructor `PlaybackRatePlayingTime::with(playingTimeMs: 0, ...)`
+It is recommended to use the static `with` constructor `BrowserContext::with(schemaVersion: 1, ...)`
 and named parameters to initialize value objects.
 
-However, builders are also provided `(new PlaybackRatePlayingTime)->withPlayingTimeMs(0)`.
+However, builders are also provided `(new BrowserContext)->withSchemaVersion(1)`.
 
 ### Pagination
 

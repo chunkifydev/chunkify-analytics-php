@@ -36,7 +36,7 @@ final class StoredEvent implements BaseModel
      *
      * @var AnalyticsEventVariants $event
      */
-    #[Required]
+    #[Required(union: AnalyticsEvent::class)]
     public ViewStarted|ViewSnapshot|PlaybackError|ViewEnded|PlaybackStateChanged|RenditionChanged|SeekCompleted|SubtitleChanged|PlaybackRateChanged $event;
 
     /**
