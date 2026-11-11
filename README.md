@@ -44,10 +44,10 @@ var_dump($metricsResponse);
 
 ### Value Objects
 
-It is recommended to use the static `with` constructor `PlaybackRatePlayingTime::with(playingTimeMs: 0, ...)`
+It is recommended to use the static `with` constructor `BrowserContext::with(schemaVersion: 1, ...)`
 and named parameters to initialize value objects.
 
-However, builders are also provided `(new PlaybackRatePlayingTime)->withPlayingTimeMs(0)`.
+However, builders are also provided `(new BrowserContext)->withSchemaVersion(1)`.
 
 ### Pagination
 
@@ -70,11 +70,11 @@ var_dump($page);
 
 // fetch items from the current page
 foreach ($page->getItems() as $item) {
-  var_dump($item->ingest_key_id);
+  var_dump($item->ingestKeyID);
 }
 // make additional network requests to fetch items from all pages, including and after the current page
 foreach ($page->pagingEachItem() as $item) {
-  var_dump($item->ingest_key_id);
+  var_dump($item->ingestKeyID);
 }
 ```
 
