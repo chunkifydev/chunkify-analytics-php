@@ -28,21 +28,26 @@ final class AnalyticsEvent implements ConverterSource
 {
     use SdkUnion;
 
+    public static function discriminator(): string
+    {
+        return 'event_name';
+    }
+
     /**
      * @return list<string|Converter|ConverterSource>|array<string,string|Converter|ConverterSource>
      */
     public static function variants(): array
     {
         return [
-            ViewStarted::class,
-            ViewSnapshot::class,
-            PlaybackError::class,
-            ViewEnded::class,
-            PlaybackStateChanged::class,
-            RenditionChanged::class,
-            SeekCompleted::class,
-            SubtitleChanged::class,
-            PlaybackRateChanged::class,
+            'chunkify.video.view_started' => ViewStarted::class,
+            'chunkify.video.view_snapshot' => ViewSnapshot::class,
+            'chunkify.video.playback_error' => PlaybackError::class,
+            'chunkify.video.view_ended' => ViewEnded::class,
+            'chunkify.video.playback_state_changed' => PlaybackStateChanged::class,
+            'chunkify.video.rendition_changed' => RenditionChanged::class,
+            'chunkify.video.seek_completed' => SeekCompleted::class,
+            'chunkify.video.subtitle_changed' => SubtitleChanged::class,
+            'chunkify.video.playback_rate_changed' => PlaybackRateChanged::class,
         ];
     }
 }
