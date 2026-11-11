@@ -21,4 +21,12 @@ enum GroupBy: string
     case PAGE_ORIGIN = 'page_origin';
 
     case PAGE_PATH = 'page_path';
+
+    case SUBTITLE_LANGUAGE = 'subtitle_language';
+
+    case PLAYBACK_RATE = 'playback_rate';
+
+    case VIDEO_TITLE = 'video_title';
+
+    case USER_ID = 'user_id';
 }
