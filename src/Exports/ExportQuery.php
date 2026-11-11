@@ -24,10 +24,10 @@ use ChunkifyAnalytics\Exports\ExportQuery\SortBy;
  *   continent?: null|Continent|value-of<Continent>,
  *   country?: string|null,
  *   deviceType?: null|DeviceType|value-of<DeviceType>,
- *   dimension?: null|Dimension|value-of<Dimension>,
+ *   dimension?: string|null|Dimension|value-of<Dimension>,
  *   eventName?: null|EventName|value-of<EventName>,
  *   from?: \DateTimeInterface|null,
- *   groupBy?: null|GroupBy|value-of<GroupBy>,
+ *   groupBy?: string|null|GroupBy|value-of<GroupBy>,
  *   hasFatalError?: bool|null,
  *   interval?: null|Interval|value-of<Interval>,
  *   kind?: null|Kind|value-of<Kind>,
@@ -35,9 +35,13 @@ use ChunkifyAnalytics\Exports\ExportQuery\SortBy;
  *   osName?: string|null,
  *   pageOrigin?: string|null,
  *   pagePath?: string|null,
+ *   playbackRate?: string|null,
  *   sortBy?: null|SortBy|value-of<SortBy>,
+ *   subtitleLanguage?: string|null,
  *   to?: \DateTimeInterface|null,
+ *   userID?: string|null,
  *   videoID?: string|null,
+ *   videoTitle?: string|null,
  *   viewID?: string|null,
  *   viewerID?: string|null,
  * }
@@ -64,7 +68,11 @@ final class ExportQuery implements BaseModel
     #[Optional('device_type', enum: DeviceType::class)]
     public ?string $deviceType;
 
-    /** @var value-of<Dimension>|null $dimension */
+    /**
+     * One custom dimension's values, such as custom.plan.
+     *
+     * @var string|value-of<Dimension>|null $dimension
+     */
     #[Optional(enum: Dimension::class)]
     public ?string $dimension;
 
@@ -75,7 +83,11 @@ final class ExportQuery implements BaseModel
     #[Optional]
     public ?\DateTimeInterface $from;
 
-    /** @var value-of<GroupBy>|null $groupBy */
+    /**
+     * A custom dimension key, such as custom.plan.
+     *
+     * @var string|value-of<GroupBy>|null $groupBy
+     */
     #[Optional('group_by', enum: GroupBy::class)]
     public ?string $groupBy;
 
@@ -109,6 +121,9 @@ final class ExportQuery implements BaseModel
     #[Optional('page_path')]
     public ?string $pagePath;
 
+    #[Optional('playback_rate')]
+    public ?string $playbackRate;
+
     /**
      * Videos or views only. Use a sort field supported by the selected resource. Defaults to video_id for videos and started_at for views.
      *
@@ -117,11 +132,20 @@ final class ExportQuery implements BaseModel
     #[Optional('sort_by', enum: SortBy::class)]
     public ?string $sortBy;
 
+    #[Optional('subtitle_language')]
+    public ?string $subtitleLanguage;
+
     #[Optional]
     public ?\DateTimeInterface $to;
 
+    #[Optional('user_id')]
+    public ?string $userID;
+
     #[Optional('video_id')]
     public ?string $videoID;
+
+    #[Optional('video_title')]
+    public ?string $videoTitle;
 
     #[Optional('view_id')]
     public ?string $viewID;
@@ -141,9 +165,9 @@ final class ExportQuery implements BaseModel
      *
      * @param Continent|value-of<Continent>|null $continent
      * @param DeviceType|value-of<DeviceType>|null $deviceType
-     * @param Dimension|value-of<Dimension>|null $dimension
+     * @param string|Dimension|value-of<Dimension>|null $dimension
      * @param EventName|value-of<EventName>|null $eventName
-     * @param GroupBy|value-of<GroupBy>|null $groupBy
+     * @param string|GroupBy|value-of<GroupBy>|null $groupBy
      * @param Interval|value-of<Interval>|null $interval
      * @param Kind|value-of<Kind>|null $kind
      * @param Order|value-of<Order>|null $order
@@ -166,9 +190,13 @@ final class ExportQuery implements BaseModel
         ?string $osName = null,
         ?string $pageOrigin = null,
         ?string $pagePath = null,
+        ?string $playbackRate = null,
         SortBy|string|null $sortBy = null,
+        ?string $subtitleLanguage = null,
         ?\DateTimeInterface $to = null,
+        ?string $userID = null,
         ?string $videoID = null,
+        ?string $videoTitle = null,
         ?string $viewID = null,
         ?string $viewerID = null,
     ): self {
@@ -190,9 +218,13 @@ final class ExportQuery implements BaseModel
         null !== $osName && $self['osName'] = $osName;
         null !== $pageOrigin && $self['pageOrigin'] = $pageOrigin;
         null !== $pagePath && $self['pagePath'] = $pagePath;
+        null !== $playbackRate && $self['playbackRate'] = $playbackRate;
         null !== $sortBy && $self['sortBy'] = $sortBy;
+        null !== $subtitleLanguage && $self['subtitleLanguage'] = $subtitleLanguage;
         null !== $to && $self['to'] = $to;
+        null !== $userID && $self['userID'] = $userID;
         null !== $videoID && $self['videoID'] = $videoID;
+        null !== $videoTitle && $self['videoTitle'] = $videoTitle;
         null !== $viewID && $self['viewID'] = $viewID;
         null !== $viewerID && $self['viewerID'] = $viewerID;
 
@@ -246,7 +278,9 @@ final class ExportQuery implements BaseModel
     }
 
     /**
-     * @param Dimension|value-of<Dimension> $dimension
+     * One custom dimension's values, such as custom.plan.
+     *
+     * @param string|Dimension|value-of<Dimension> $dimension
      */
     public function withDimension(Dimension|string $dimension): self
     {
@@ -276,7 +310,9 @@ final class ExportQuery implements BaseModel
     }
 
     /**
-     * @param GroupBy|value-of<GroupBy> $groupBy
+     * A custom dimension key, such as custom.plan.
+     *
+     * @param string|GroupBy|value-of<GroupBy> $groupBy
      */
     public function withGroupBy(GroupBy|string $groupBy): self
     {
@@ -357,6 +393,14 @@ final class ExportQuery implements BaseModel
         return $self;
     }
 
+    public function withPlaybackRate(string $playbackRate): self
+    {
+        $self = clone $this;
+        $self['playbackRate'] = $playbackRate;
+
+        return $self;
+    }
+
     /**
      * Videos or views only. Use a sort field supported by the selected resource. Defaults to video_id for videos and started_at for views.
      *
@@ -370,6 +414,14 @@ final class ExportQuery implements BaseModel
         return $self;
     }
 
+    public function withSubtitleLanguage(string $subtitleLanguage): self
+    {
+        $self = clone $this;
+        $self['subtitleLanguage'] = $subtitleLanguage;
+
+        return $self;
+    }
+
     public function withTo(\DateTimeInterface $to): self
     {
         $self = clone $this;
@@ -378,10 +430,26 @@ final class ExportQuery implements BaseModel
         return $self;
     }
 
+    public function withUserID(string $userID): self
+    {
+        $self = clone $this;
+        $self['userID'] = $userID;
+
+        return $self;
+    }
+
     public function withVideoID(string $videoID): self
     {
         $self = clone $this;
         $self['videoID'] = $videoID;
+
+        return $self;
+    }
+
+    public function withVideoTitle(string $videoTitle): self
+    {
+        $self = clone $this;
+        $self['videoTitle'] = $videoTitle;
 
         return $self;
     }

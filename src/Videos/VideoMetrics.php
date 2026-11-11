@@ -17,6 +17,7 @@ use ChunkifyAnalytics\PlaybackScore;
  *   totalPlayingTimeMs: float,
  *   uniqueViewers: int,
  *   videoID: string,
+ *   videoTitle: string|null,
  *   views: int,
  * }
  */
@@ -37,6 +38,12 @@ final class VideoMetrics implements BaseModel
     #[Required('video_id')]
     public string $videoID;
 
+    /**
+     * Title from the most recently received selected start that supplied one.
+     */
+    #[Required('video_title')]
+    public ?string $videoTitle;
+
     #[Required]
     public int $views;
 
@@ -50,6 +57,7 @@ final class VideoMetrics implements BaseModel
      *   totalPlayingTimeMs: ...,
      *   uniqueViewers: ...,
      *   videoID: ...,
+     *   videoTitle: ...,
      *   views: ...,
      * )
      * ```
@@ -62,6 +70,7 @@ final class VideoMetrics implements BaseModel
      *   ->withTotalPlayingTimeMs(...)
      *   ->withUniqueViewers(...)
      *   ->withVideoID(...)
+     *   ->withVideoTitle(...)
      *   ->withViews(...)
      * ```
      */
@@ -82,6 +91,7 @@ final class VideoMetrics implements BaseModel
         float $totalPlayingTimeMs,
         int $uniqueViewers,
         string $videoID,
+        ?string $videoTitle,
         int $views,
     ): self {
         $self = new self;
@@ -90,6 +100,7 @@ final class VideoMetrics implements BaseModel
         $self['totalPlayingTimeMs'] = $totalPlayingTimeMs;
         $self['uniqueViewers'] = $uniqueViewers;
         $self['videoID'] = $videoID;
+        $self['videoTitle'] = $videoTitle;
         $self['views'] = $views;
 
         return $self;
@@ -126,6 +137,17 @@ final class VideoMetrics implements BaseModel
     {
         $self = clone $this;
         $self['videoID'] = $videoID;
+
+        return $self;
+    }
+
+    /**
+     * Title from the most recently received selected start that supplied one.
+     */
+    public function withVideoTitle(?string $videoTitle): self
+    {
+        $self = clone $this;
+        $self['videoTitle'] = $videoTitle;
 
         return $self;
     }
