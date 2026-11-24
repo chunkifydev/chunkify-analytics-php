@@ -7,6 +7,7 @@ namespace ChunkifyAnalytics\ServiceContracts;
 use ChunkifyAnalytics\Core\Exceptions\APIException;
 use ChunkifyAnalytics\Renditions\RenditionReport;
 use ChunkifyAnalytics\Renditions\RenditionRetrieveParams\Continent;
+use ChunkifyAnalytics\Renditions\RenditionRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Renditions\RenditionRetrieveParams\DeviceType;
 use ChunkifyAnalytics\RequestOptions;
 
@@ -22,6 +23,7 @@ interface RenditionsContract
      * @param string $city Exact, case-sensitive city name from the local lookup, with 1 to 256 Unicode characters. Use country alongside city to distinguish places with the same name. Missing locations do not match.
      * @param Continent|value-of<Continent> $continent Exact continent code from the local lookup. Missing locations do not match.
      * @param string $country Exact uppercase ISO 3166-1 alpha-2 country code, such as GB. Missing locations do not match.
+     * @param DeliveryFormat|value-of<DeliveryFormat> $deliveryFormat Delivery format on the first retained view start: hls for HLS streams, file for a single media file such as an MP4 rendition. Metrics use the first retained view start; raw events use each event's value. Views whose SDK did not report it do not match. connector_name is not a substitute: Safari plays HLS natively and reports html-media.
      * @param DeviceType|value-of<DeviceType> $deviceType Exact device class. unknown matches an explicit unknown value.
      * @param \DateTimeInterface $from Inclusive RFC3339 occurrence-time lower bound, with timezone. Summary/video queries apply it to the selected view_started event. Must be before to.
      * @param int $limit Maximum rows on this page. Events and videos always support pagination; summary, quality and engagement support it only with group_by.
@@ -45,6 +47,7 @@ interface RenditionsContract
         ?string $city = null,
         Continent|string|null $continent = null,
         ?string $country = null,
+        DeliveryFormat|string|null $deliveryFormat = null,
         DeviceType|string|null $deviceType = null,
         ?\DateTimeInterface $from = null,
         int $limit = 100,

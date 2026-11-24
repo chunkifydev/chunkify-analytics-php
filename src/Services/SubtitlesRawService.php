@@ -13,6 +13,7 @@ use ChunkifyAnalytics\ServiceContracts\SubtitlesRawContract;
 use ChunkifyAnalytics\Subtitles\SubtitleReport;
 use ChunkifyAnalytics\Subtitles\SubtitleRetrieveParams;
 use ChunkifyAnalytics\Subtitles\SubtitleRetrieveParams\Continent;
+use ChunkifyAnalytics\Subtitles\SubtitleRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Subtitles\SubtitleRetrieveParams\DeviceType;
 
 /**
@@ -38,6 +39,7 @@ final class SubtitlesRawService implements SubtitlesRawContract
      *   city?: string,
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   limit?: int,
@@ -76,6 +78,7 @@ final class SubtitlesRawService implements SubtitlesRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'osName' => 'os_name',
                     'pageOrigin' => 'page_origin',

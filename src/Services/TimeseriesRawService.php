@@ -16,6 +16,7 @@ use ChunkifyAnalytics\Timeseries\Timeseries;
 use ChunkifyAnalytics\Timeseries\TimeseriesResponse;
 use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams;
 use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\Continent;
+use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\DeviceType;
 use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\Interval;
 use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\Kind;
@@ -46,6 +47,7 @@ final class TimeseriesRawService implements TimeseriesRawContract
      *   city?: string,
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   kind?: Kind|value-of<Kind>,
      *   osName?: string,
@@ -82,6 +84,7 @@ final class TimeseriesRawService implements TimeseriesRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'osName' => 'os_name',
                     'pageOrigin' => 'page_origin',

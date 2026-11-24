@@ -12,6 +12,7 @@ use ChunkifyAnalytics\RequestOptions;
 use ChunkifyAnalytics\Retention\RetentionReport;
 use ChunkifyAnalytics\Retention\RetentionRetrieveParams;
 use ChunkifyAnalytics\Retention\RetentionRetrieveParams\Continent;
+use ChunkifyAnalytics\Retention\RetentionRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Retention\RetentionRetrieveParams\DeviceType;
 use ChunkifyAnalytics\ServiceContracts\RetentionRawContract;
 
@@ -39,6 +40,7 @@ final class RetentionRawService implements RetentionRawContract
      *   city?: string,
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   osName?: string,
@@ -76,6 +78,7 @@ final class RetentionRawService implements RetentionRawContract
                 [
                     'videoID' => 'video_id',
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'osName' => 'os_name',
                     'pageOrigin' => 'page_origin',

@@ -12,6 +12,7 @@ use ChunkifyAnalytics\ServiceContracts\SummaryContract;
 use ChunkifyAnalytics\Summary\Metrics;
 use ChunkifyAnalytics\Summary\MetricsBreakdownPage;
 use ChunkifyAnalytics\Summary\SummaryRetrieveParams\Continent;
+use ChunkifyAnalytics\Summary\SummaryRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Summary\SummaryRetrieveParams\DeviceType;
 use ChunkifyAnalytics\Summary\SummaryRetrieveParams\GroupBy;
 
@@ -45,9 +46,10 @@ final class SummaryService implements SummaryContract
      * @param Continent|value-of<Continent> $continent Exact continent code from the local lookup. Missing locations do not match.
      * @param string $country Exact uppercase ISO 3166-1 alpha-2 country code, such as GB. Missing locations do not match.
      * @param string $cursor Use next_cursor from the previous page. Keep the same filters, sort_by and order. Video cursors from earlier versions are invalid; start a new pagination sequence after upgrading.
+     * @param DeliveryFormat|value-of<DeliveryFormat> $deliveryFormat Delivery format on the first retained view start: hls for HLS streams, file for a single media file such as an MP4 rendition. Metrics use the first retained view start; raw events use each event's value. Views whose SDK did not report it do not match. connector_name is not a substitute: Safari plays HLS natively and reports html-media.
      * @param DeviceType|value-of<DeviceType> $deviceType Exact device class. unknown matches an explicit unknown value.
      * @param \DateTimeInterface $from Inclusive RFC3339 occurrence-time lower bound, with timezone. Summary/video queries apply it to the selected view_started event. Must be before to.
-     * @param string|GroupBy|value-of<GroupBy> $groupBy Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites. video_title groups by the title on each view's first retained start, so a renamed video counts each view under the title it started with. user_id groups by the user ID on each view's first retained start. Use custom.<key>, such as custom.plan, to group by a custom dimension; views without the key form the null group.
+     * @param string|GroupBy|value-of<GroupBy> $groupBy Optional on summary, quality and engagement. Group views by this field on their first retained start. Missing, null and nonstring context forms a null group; the literal device type unknown stays separate. Groups sort by views descending, then value ascending with null first for ties. Pagination is available only with group_by. Location uses the first retained start too. City groups use the stored name; filter by country to avoid combining names shared by different countries. Page groups use the first retained start even if playback continues after navigation. Filter by page_origin when grouping page_path to distinguish identical paths on different sites. video_title groups by the title on each view's first retained start, so a renamed video counts each view under the title it started with. delivery_format groups by hls or file on each view's first retained start; views from SDKs that do not report it form the null group. user_id groups by the user ID on each view's first retained start. Use custom.<key>, such as custom.plan, to group by a custom dimension; views without the key form the null group.
      * @param int $limit Maximum rows on this page. Events and videos always support pagination; summary, quality and engagement support it only with group_by.
      * @param string $osName Exact operating-system name, such as macOS. Missing values do not match.
      * @param string $pageOrigin Exact, case-sensitive page origin captured by the player, such as https://example.com. Metrics use the first retained view start; raw events use each event context. Missing values do not match.
@@ -70,6 +72,7 @@ final class SummaryService implements SummaryContract
         Continent|string|null $continent = null,
         ?string $country = null,
         ?string $cursor = null,
+        DeliveryFormat|string|null $deliveryFormat = null,
         DeviceType|string|null $deviceType = null,
         ?\DateTimeInterface $from = null,
         GroupBy|string|null $groupBy = null,
@@ -94,6 +97,7 @@ final class SummaryService implements SummaryContract
                 'continent' => $continent,
                 'country' => $country,
                 'cursor' => $cursor,
+                'deliveryFormat' => $deliveryFormat,
                 'deviceType' => $deviceType,
                 'from' => $from,
                 'groupBy' => $groupBy,

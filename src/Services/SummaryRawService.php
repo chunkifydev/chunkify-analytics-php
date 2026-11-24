@@ -15,6 +15,7 @@ use ChunkifyAnalytics\Summary\MetricsBreakdownPage;
 use ChunkifyAnalytics\Summary\MetricsResponse;
 use ChunkifyAnalytics\Summary\SummaryRetrieveParams;
 use ChunkifyAnalytics\Summary\SummaryRetrieveParams\Continent;
+use ChunkifyAnalytics\Summary\SummaryRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Summary\SummaryRetrieveParams\DeviceType;
 use ChunkifyAnalytics\Summary\SummaryRetrieveParams\GroupBy;
 
@@ -42,6 +43,7 @@ final class SummaryRawService implements SummaryRawContract
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
      *   cursor?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   groupBy?: string|GroupBy|value-of<GroupBy>,
@@ -81,6 +83,7 @@ final class SummaryRawService implements SummaryRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'groupBy' => 'group_by',
                     'osName' => 'os_name',
