@@ -9,6 +9,7 @@ use ChunkifyAnalytics\Core\Concerns\SdkModel;
 use ChunkifyAnalytics\Core\Concerns\SdkParams;
 use ChunkifyAnalytics\Core\Contracts\BaseModel;
 use ChunkifyAnalytics\Errors\ErrorListParams\Continent;
+use ChunkifyAnalytics\Errors\ErrorListParams\DeliveryFormat;
 use ChunkifyAnalytics\Errors\ErrorListParams\DeviceType;
 
 /**
@@ -22,6 +23,7 @@ use ChunkifyAnalytics\Errors\ErrorListParams\DeviceType;
  *   continent?: null|Continent|value-of<Continent>,
  *   country?: string|null,
  *   cursor?: string|null,
+ *   deliveryFormat?: null|DeliveryFormat|value-of<DeliveryFormat>,
  *   deviceType?: null|DeviceType|value-of<DeviceType>,
  *   from?: \DateTimeInterface|null,
  *   limit?: int|null,
@@ -75,6 +77,14 @@ final class ErrorListParams implements BaseModel
      */
     #[Optional]
     public ?string $cursor;
+
+    /**
+     * Delivery format on the first retained view start: hls for HLS streams, file for a single media file such as an MP4 rendition. Metrics use the first retained view start; raw events use each event's value. Views whose SDK did not report it do not match. connector_name is not a substitute: Safari plays HLS natively and reports html-media.
+     *
+     * @var value-of<DeliveryFormat>|null $deliveryFormat
+     */
+    #[Optional(enum: DeliveryFormat::class)]
+    public ?string $deliveryFormat;
 
     /**
      * Exact device class. unknown matches an explicit unknown value.
@@ -173,6 +183,7 @@ final class ErrorListParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Continent|value-of<Continent>|null $continent
+     * @param DeliveryFormat|value-of<DeliveryFormat>|null $deliveryFormat
      * @param DeviceType|value-of<DeviceType>|null $deviceType
      */
     public static function with(
@@ -181,6 +192,7 @@ final class ErrorListParams implements BaseModel
         Continent|string|null $continent = null,
         ?string $country = null,
         ?string $cursor = null,
+        DeliveryFormat|string|null $deliveryFormat = null,
         DeviceType|string|null $deviceType = null,
         ?\DateTimeInterface $from = null,
         ?int $limit = null,
@@ -203,6 +215,7 @@ final class ErrorListParams implements BaseModel
         null !== $continent && $self['continent'] = $continent;
         null !== $country && $self['country'] = $country;
         null !== $cursor && $self['cursor'] = $cursor;
+        null !== $deliveryFormat && $self['deliveryFormat'] = $deliveryFormat;
         null !== $deviceType && $self['deviceType'] = $deviceType;
         null !== $from && $self['from'] = $from;
         null !== $limit && $self['limit'] = $limit;
@@ -274,6 +287,20 @@ final class ErrorListParams implements BaseModel
     {
         $self = clone $this;
         $self['cursor'] = $cursor;
+
+        return $self;
+    }
+
+    /**
+     * Delivery format on the first retained view start: hls for HLS streams, file for a single media file such as an MP4 rendition. Metrics use the first retained view start; raw events use each event's value. Views whose SDK did not report it do not match. connector_name is not a substitute: Safari plays HLS natively and reports html-media.
+     *
+     * @param DeliveryFormat|value-of<DeliveryFormat> $deliveryFormat
+     */
+    public function withDeliveryFormat(
+        DeliveryFormat|string $deliveryFormat
+    ): self {
+        $self = clone $this;
+        $self['deliveryFormat'] = $deliveryFormat;
 
         return $self;
     }

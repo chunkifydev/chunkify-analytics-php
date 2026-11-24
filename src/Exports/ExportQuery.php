@@ -8,6 +8,7 @@ use ChunkifyAnalytics\Core\Attributes\Optional;
 use ChunkifyAnalytics\Core\Concerns\SdkModel;
 use ChunkifyAnalytics\Core\Contracts\BaseModel;
 use ChunkifyAnalytics\Exports\ExportQuery\Continent;
+use ChunkifyAnalytics\Exports\ExportQuery\DeliveryFormat;
 use ChunkifyAnalytics\Exports\ExportQuery\DeviceType;
 use ChunkifyAnalytics\Exports\ExportQuery\Dimension;
 use ChunkifyAnalytics\Exports\ExportQuery\EventName;
@@ -23,6 +24,7 @@ use ChunkifyAnalytics\Exports\ExportQuery\SortBy;
  *   city?: string|null,
  *   continent?: null|Continent|value-of<Continent>,
  *   country?: string|null,
+ *   deliveryFormat?: null|DeliveryFormat|value-of<DeliveryFormat>,
  *   deviceType?: null|DeviceType|value-of<DeviceType>,
  *   dimension?: string|null|Dimension|value-of<Dimension>,
  *   eventName?: null|EventName|value-of<EventName>,
@@ -63,6 +65,10 @@ final class ExportQuery implements BaseModel
 
     #[Optional]
     public ?string $country;
+
+    /** @var value-of<DeliveryFormat>|null $deliveryFormat */
+    #[Optional('delivery_format', enum: DeliveryFormat::class)]
+    public ?string $deliveryFormat;
 
     /** @var value-of<DeviceType>|null $deviceType */
     #[Optional('device_type', enum: DeviceType::class)]
@@ -164,6 +170,7 @@ final class ExportQuery implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Continent|value-of<Continent>|null $continent
+     * @param DeliveryFormat|value-of<DeliveryFormat>|null $deliveryFormat
      * @param DeviceType|value-of<DeviceType>|null $deviceType
      * @param string|Dimension|value-of<Dimension>|null $dimension
      * @param EventName|value-of<EventName>|null $eventName
@@ -178,6 +185,7 @@ final class ExportQuery implements BaseModel
         ?string $city = null,
         Continent|string|null $continent = null,
         ?string $country = null,
+        DeliveryFormat|string|null $deliveryFormat = null,
         DeviceType|string|null $deviceType = null,
         Dimension|string|null $dimension = null,
         EventName|string|null $eventName = null,
@@ -206,6 +214,7 @@ final class ExportQuery implements BaseModel
         null !== $city && $self['city'] = $city;
         null !== $continent && $self['continent'] = $continent;
         null !== $country && $self['country'] = $country;
+        null !== $deliveryFormat && $self['deliveryFormat'] = $deliveryFormat;
         null !== $deviceType && $self['deviceType'] = $deviceType;
         null !== $dimension && $self['dimension'] = $dimension;
         null !== $eventName && $self['eventName'] = $eventName;
@@ -262,6 +271,18 @@ final class ExportQuery implements BaseModel
     {
         $self = clone $this;
         $self['country'] = $country;
+
+        return $self;
+    }
+
+    /**
+     * @param DeliveryFormat|value-of<DeliveryFormat> $deliveryFormat
+     */
+    public function withDeliveryFormat(
+        DeliveryFormat|string $deliveryFormat
+    ): self {
+        $self = clone $this;
+        $self['deliveryFormat'] = $deliveryFormat;
 
         return $self;
     }

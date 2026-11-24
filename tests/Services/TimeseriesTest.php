@@ -64,6 +64,7 @@ final class TimeseriesTest extends TestCase
             city: 'x',
             continent: 'AF',
             country: 'SE',
+            deliveryFormat: 'hls',
             deviceType: 'desktop',
             kind: 'summary',
             osName: 'x',
