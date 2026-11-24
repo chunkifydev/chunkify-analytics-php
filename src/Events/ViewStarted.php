@@ -11,6 +11,7 @@ use ChunkifyAnalytics\Core\Concerns\SdkModel;
 use ChunkifyAnalytics\Core\Contracts\BaseModel;
 use ChunkifyAnalytics\Core\Omit;
 use ChunkifyAnalytics\CustomDimensionItem;
+use ChunkifyAnalytics\Events\ViewStarted\DeliveryFormat;
 use ChunkifyAnalytics\Events\ViewStarted\ErrorCategory;
 use ChunkifyAnalytics\Events\ViewStarted\Reason;
 use ChunkifyAnalytics\Events\ViewStarted\StartupOutcome;
@@ -82,6 +83,7 @@ use ChunkifyAnalytics\SubtitlePlayingTime;
  *   viewerID: string|null,
  *   browserContext?: null|BrowserContext|BrowserContextShape,
  *   custom?: array<string,CustomDimensionItemShape>|null,
+ *   deliveryFormat?: null|DeliveryFormat|value-of<DeliveryFormat>,
  *   playbackRate?: float|null,
  *   playbackRatePlayingTime?: list<PlaybackRatePlayingTime|PlaybackRatePlayingTimeShape>|null,
  *   playedRanges?: list<PlayedRange|PlayedRangeShape>|null,
@@ -268,6 +270,14 @@ final class ViewStarted implements BaseModel
      */
     #[Optional(map: CustomDimensionItem::class)]
     public ?array $custom;
+
+    /**
+     * How the player receives the media: hls for an HLS stream, file for a single media file such as an MP4 rendition; null when unknown. Optional: older SDKs omit it. Reports read it from each view's first start. Unlike connector_name, it does not depend on the playback engine: Safari's native HLS reports html-media.
+     *
+     * @var value-of<DeliveryFormat>|null $deliveryFormat
+     */
+    #[Optional('delivery_format', enum: DeliveryFormat::class, nullable: true)]
+    public ?string $deliveryFormat;
 
     /**
      * Current playback rate, rounded to two decimals, such as 1, 1.5 or 2; from 0.01 to 16. Optional.
@@ -463,6 +473,7 @@ final class ViewStarted implements BaseModel
      * @param StartupOutcome|value-of<StartupOutcome>|null $startupOutcome
      * @param Omit|BrowserContext|BrowserContextShape|null $browserContext
      * @param array<string,CustomDimensionItemShape>|null $custom
+     * @param Omit|DeliveryFormat|value-of<DeliveryFormat>|null $deliveryFormat
      * @param list<PlaybackRatePlayingTime|PlaybackRatePlayingTimeShape>|Omit|null $playbackRatePlayingTime
      * @param list<PlayedRange|PlayedRangeShape>|Omit|null $playedRanges
      * @param list<SubtitlePlayingTime|SubtitlePlayingTimeShape>|Omit|null $subtitlePlayingTime
@@ -517,6 +528,7 @@ final class ViewStarted implements BaseModel
         ?string $viewerID,
         Omit|BrowserContext|array|null $browserContext = Omit::Value,
         ?array $custom = null,
+        Omit|DeliveryFormat|string|null $deliveryFormat = Omit::Value,
         float|Omit|null $playbackRate = Omit::Value,
         array|Omit|null $playbackRatePlayingTime = Omit::Value,
         array|Omit|null $playedRanges = Omit::Value,
@@ -578,6 +590,7 @@ final class ViewStarted implements BaseModel
 
         Omit::Value !== $browserContext && $self['browserContext'] = $browserContext;
         null !== $custom && $self['custom'] = $custom;
+        Omit::Value !== $deliveryFormat && $self['deliveryFormat'] = $deliveryFormat;
         Omit::Value !== $playbackRate && $self['playbackRate'] = $playbackRate;
         Omit::Value !== $playbackRatePlayingTime && $self['playbackRatePlayingTime'] = $playbackRatePlayingTime;
         Omit::Value !== $playedRanges && $self['playedRanges'] = $playedRanges;
@@ -1036,6 +1049,20 @@ final class ViewStarted implements BaseModel
     {
         $self = clone $this;
         $self['custom'] = $custom;
+
+        return $self;
+    }
+
+    /**
+     * How the player receives the media: hls for an HLS stream, file for a single media file such as an MP4 rendition; null when unknown. Optional: older SDKs omit it. Reports read it from each view's first start. Unlike connector_name, it does not depend on the playback engine: Safari's native HLS reports html-media.
+     *
+     * @param DeliveryFormat|value-of<DeliveryFormat>|null $deliveryFormat
+     */
+    public function withDeliveryFormat(
+        DeliveryFormat|string|null $deliveryFormat
+    ): self {
+        $self = clone $this;
+        $self['deliveryFormat'] = $deliveryFormat;
 
         return $self;
     }

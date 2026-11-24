@@ -10,6 +10,7 @@ use ChunkifyAnalytics\Core\Exceptions\APIException;
 use ChunkifyAnalytics\Core\Util;
 use ChunkifyAnalytics\Dimensions\DimensionListValuesParams;
 use ChunkifyAnalytics\Dimensions\DimensionListValuesParams\Continent;
+use ChunkifyAnalytics\Dimensions\DimensionListValuesParams\DeliveryFormat;
 use ChunkifyAnalytics\Dimensions\DimensionListValuesParams\DeviceType;
 use ChunkifyAnalytics\Dimensions\DimensionListValuesParams\Dimension;
 use ChunkifyAnalytics\Dimensions\DimensionValues\Value;
@@ -42,6 +43,7 @@ final class DimensionsRawService implements DimensionsRawContract
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
      *   cursor?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   limit?: int,
@@ -81,6 +83,7 @@ final class DimensionsRawService implements DimensionsRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'osName' => 'os_name',
                     'pageOrigin' => 'page_origin',

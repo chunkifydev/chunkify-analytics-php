@@ -10,6 +10,7 @@ use ChunkifyAnalytics\Core\Attributes\Required;
 use ChunkifyAnalytics\Core\Concerns\SdkModel;
 use ChunkifyAnalytics\Core\Contracts\BaseModel;
 use ChunkifyAnalytics\Core\Omit;
+use ChunkifyAnalytics\Events\SeekCompleted\DeliveryFormat;
 use ChunkifyAnalytics\Events\SeekCompleted\ErrorCategory;
 use ChunkifyAnalytics\Events\SeekCompleted\Reason;
 use ChunkifyAnalytics\Events\SeekCompleted\SeekOutcome;
@@ -59,6 +60,7 @@ use ChunkifyAnalytics\RenditionPlayingTime;
  *   viewID: string,
  *   viewerID: string|null,
  *   browserContext?: null|BrowserContext|BrowserContextShape,
+ *   deliveryFormat?: null|DeliveryFormat|value-of<DeliveryFormat>,
  *   deliveryRequestCount?: float|null,
  *   deliveryThroughputBps?: float|null,
  *   deliveryTransferredBytes?: float|null,
@@ -72,6 +74,7 @@ use ChunkifyAnalytics\RenditionPlayingTime;
  *   playerHeightPx?: float|null,
  *   playerWidthPx?: float|null,
  *   playingTimeMs?: float|null,
+ *   previousStateDurationMs?: float|null,
  *   rebufferCount?: float|null,
  *   rebufferDurationMs?: float|null,
  *   rebufferRatio?: float|null,
@@ -212,6 +215,14 @@ final class SeekCompleted implements BaseModel
     #[Optional('browser_context', nullable: true)]
     public ?BrowserContext $browserContext;
 
+    /**
+     * How the player receives the media: hls for an HLS stream, file for a single media file such as an MP4 rendition; null when unknown. Optional: older SDKs omit it. Reports read it from each view's first start. Unlike connector_name, it does not depend on the playback engine: Safari's native HLS reports html-media.
+     *
+     * @var value-of<DeliveryFormat>|null $deliveryFormat
+     */
+    #[Optional('delivery_format', enum: DeliveryFormat::class, nullable: true)]
+    public ?string $deliveryFormat;
+
     #[Optional('delivery_request_count', nullable: true)]
     public ?float $deliveryRequestCount;
 
@@ -250,6 +261,12 @@ final class SeekCompleted implements BaseModel
 
     #[Optional('playing_time_ms')]
     public ?float $playingTimeMs;
+
+    /**
+     * Wall-clock time spent in state_before_seek until the seek started, excluding the seek. The state after the seek is timed from when the seek ends, so each stretch is reported once. Omitted by older SDKs.
+     */
+    #[Optional('previous_state_duration_ms')]
+    public ?float $previousStateDurationMs;
 
     #[Optional('rebuffer_count')]
     public ?float $rebufferCount;
@@ -408,6 +425,7 @@ final class SeekCompleted implements BaseModel
      * @param StateAfterSeek|value-of<StateAfterSeek> $stateAfterSeek
      * @param StateBeforeSeek|value-of<StateBeforeSeek> $stateBeforeSeek
      * @param Omit|BrowserContext|BrowserContextShape|null $browserContext
+     * @param Omit|DeliveryFormat|value-of<DeliveryFormat>|null $deliveryFormat
      * @param list<RenditionPlayingTime|RenditionPlayingTimeShape>|Omit|null $renditionPlayingTime
      * @param Omit|VisibilityState|value-of<VisibilityState>|null $visibilityState
      */
@@ -443,6 +461,7 @@ final class SeekCompleted implements BaseModel
         string $viewID,
         ?string $viewerID,
         Omit|BrowserContext|array|null $browserContext = Omit::Value,
+        Omit|DeliveryFormat|string|null $deliveryFormat = Omit::Value,
         float|Omit|null $deliveryRequestCount = Omit::Value,
         float|Omit|null $deliveryThroughputBps = Omit::Value,
         float|Omit|null $deliveryTransferredBytes = Omit::Value,
@@ -456,6 +475,7 @@ final class SeekCompleted implements BaseModel
         float|Omit|null $playerHeightPx = Omit::Value,
         float|Omit|null $playerWidthPx = Omit::Value,
         ?float $playingTimeMs = null,
+        ?float $previousStateDurationMs = null,
         ?float $rebufferCount = null,
         ?float $rebufferDurationMs = null,
         float|Omit|null $rebufferRatio = Omit::Value,
@@ -507,6 +527,7 @@ final class SeekCompleted implements BaseModel
         $self['viewerID'] = $viewerID;
 
         Omit::Value !== $browserContext && $self['browserContext'] = $browserContext;
+        Omit::Value !== $deliveryFormat && $self['deliveryFormat'] = $deliveryFormat;
         Omit::Value !== $deliveryRequestCount && $self['deliveryRequestCount'] = $deliveryRequestCount;
         Omit::Value !== $deliveryThroughputBps && $self['deliveryThroughputBps'] = $deliveryThroughputBps;
         Omit::Value !== $deliveryTransferredBytes && $self['deliveryTransferredBytes'] = $deliveryTransferredBytes;
@@ -520,6 +541,7 @@ final class SeekCompleted implements BaseModel
         Omit::Value !== $playerHeightPx && $self['playerHeightPx'] = $playerHeightPx;
         Omit::Value !== $playerWidthPx && $self['playerWidthPx'] = $playerWidthPx;
         null !== $playingTimeMs && $self['playingTimeMs'] = $playingTimeMs;
+        null !== $previousStateDurationMs && $self['previousStateDurationMs'] = $previousStateDurationMs;
         null !== $rebufferCount && $self['rebufferCount'] = $rebufferCount;
         null !== $rebufferDurationMs && $self['rebufferDurationMs'] = $rebufferDurationMs;
         Omit::Value !== $rebufferRatio && $self['rebufferRatio'] = $rebufferRatio;
@@ -849,6 +871,20 @@ final class SeekCompleted implements BaseModel
         return $self;
     }
 
+    /**
+     * How the player receives the media: hls for an HLS stream, file for a single media file such as an MP4 rendition; null when unknown. Optional: older SDKs omit it. Reports read it from each view's first start. Unlike connector_name, it does not depend on the playback engine: Safari's native HLS reports html-media.
+     *
+     * @param DeliveryFormat|value-of<DeliveryFormat>|null $deliveryFormat
+     */
+    public function withDeliveryFormat(
+        DeliveryFormat|string|null $deliveryFormat
+    ): self {
+        $self = clone $this;
+        $self['deliveryFormat'] = $deliveryFormat;
+
+        return $self;
+    }
+
     public function withDeliveryRequestCount(?float $deliveryRequestCount): self
     {
         $self = clone $this;
@@ -954,6 +990,18 @@ final class SeekCompleted implements BaseModel
     {
         $self = clone $this;
         $self['playingTimeMs'] = $playingTimeMs;
+
+        return $self;
+    }
+
+    /**
+     * Wall-clock time spent in state_before_seek until the seek started, excluding the seek. The state after the seek is timed from when the seek ends, so each stretch is reported once. Omitted by older SDKs.
+     */
+    public function withPreviousStateDurationMs(
+        float $previousStateDurationMs
+    ): self {
+        $self = clone $this;
+        $self['previousStateDurationMs'] = $previousStateDurationMs;
 
         return $self;
     }
