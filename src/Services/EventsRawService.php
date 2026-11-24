@@ -13,6 +13,7 @@ use ChunkifyAnalytics\Events\EventIngestParams\ContentEncoding;
 use ChunkifyAnalytics\Events\EventIngestResponse;
 use ChunkifyAnalytics\Events\EventListParams;
 use ChunkifyAnalytics\Events\EventListParams\Continent;
+use ChunkifyAnalytics\Events\EventListParams\DeliveryFormat;
 use ChunkifyAnalytics\Events\EventListParams\DeviceType;
 use ChunkifyAnalytics\Events\EventListParams\EventName;
 use ChunkifyAnalytics\Events\EventListParams\Order;
@@ -46,6 +47,7 @@ final class EventsRawService implements EventsRawContract
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
      *   cursor?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   eventName?: value-of<EventName>,
      *   from?: \DateTimeInterface,
@@ -86,6 +88,7 @@ final class EventsRawService implements EventsRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'eventName' => 'event_name',
                     'osName' => 'os_name',

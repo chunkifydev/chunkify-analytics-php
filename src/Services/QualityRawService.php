@@ -13,6 +13,7 @@ use ChunkifyAnalytics\Quality\QualityBreakdownPage;
 use ChunkifyAnalytics\Quality\QualityResponse;
 use ChunkifyAnalytics\Quality\QualityRetrieveParams;
 use ChunkifyAnalytics\Quality\QualityRetrieveParams\Continent;
+use ChunkifyAnalytics\Quality\QualityRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Quality\QualityRetrieveParams\DeviceType;
 use ChunkifyAnalytics\Quality\QualityRetrieveParams\GroupBy;
 use ChunkifyAnalytics\RequestOptions;
@@ -42,6 +43,7 @@ final class QualityRawService implements QualityRawContract
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
      *   cursor?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   groupBy?: string|GroupBy|value-of<GroupBy>,
@@ -81,6 +83,7 @@ final class QualityRawService implements QualityRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'groupBy' => 'group_by',
                     'osName' => 'os_name',

@@ -13,6 +13,7 @@ use ChunkifyAnalytics\Engagement\EngagementBreakdownPage;
 use ChunkifyAnalytics\Engagement\EngagementResponse;
 use ChunkifyAnalytics\Engagement\EngagementRetrieveParams;
 use ChunkifyAnalytics\Engagement\EngagementRetrieveParams\Continent;
+use ChunkifyAnalytics\Engagement\EngagementRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Engagement\EngagementRetrieveParams\DeviceType;
 use ChunkifyAnalytics\Engagement\EngagementRetrieveParams\GroupBy;
 use ChunkifyAnalytics\RequestOptions;
@@ -42,6 +43,7 @@ final class EngagementRawService implements EngagementRawContract
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
      *   cursor?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   groupBy?: string|GroupBy|value-of<GroupBy>,
@@ -81,6 +83,7 @@ final class EngagementRawService implements EngagementRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'groupBy' => 'group_by',
                     'osName' => 'os_name',

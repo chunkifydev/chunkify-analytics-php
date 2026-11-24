@@ -59,6 +59,7 @@ final class RetentionTest extends TestCase
             city: 'x',
             continent: 'AF',
             country: 'SE',
+            deliveryFormat: 'hls',
             deviceType: 'desktop',
             from: new \DateTimeImmutable('2019-12-27T18:11:19.117Z'),
             osName: 'x',

@@ -9,6 +9,7 @@ use ChunkifyAnalytics\Core\Attributes\Required;
 use ChunkifyAnalytics\Core\Concerns\SdkModel;
 use ChunkifyAnalytics\Core\Contracts\BaseModel;
 use ChunkifyAnalytics\Core\Omit;
+use ChunkifyAnalytics\EventEnvelope\DeliveryFormat;
 use ChunkifyAnalytics\EventEnvelope\ErrorCategory;
 use ChunkifyAnalytics\EventEnvelope\EventName;
 use ChunkifyAnalytics\EventEnvelope\Reason;
@@ -45,6 +46,7 @@ use ChunkifyAnalytics\EventEnvelope\VisibilityState;
  *   viewID: string,
  *   viewerID: string|null,
  *   browserContext?: null|BrowserContext|BrowserContextShape,
+ *   deliveryFormat?: null|DeliveryFormat|value-of<DeliveryFormat>,
  *   deliveryRequestCount?: float|null,
  *   deliveryThroughputBps?: float|null,
  *   deliveryTransferredBytes?: float|null,
@@ -164,6 +166,14 @@ final class EventEnvelope implements BaseModel
      */
     #[Optional('browser_context', nullable: true)]
     public ?BrowserContext $browserContext;
+
+    /**
+     * How the player receives the media: hls for an HLS stream, file for a single media file such as an MP4 rendition; null when unknown. Optional: older SDKs omit it. Reports read it from each view's first start. Unlike connector_name, it does not depend on the playback engine: Safari's native HLS reports html-media.
+     *
+     * @var value-of<DeliveryFormat>|null $deliveryFormat
+     */
+    #[Optional('delivery_format', enum: DeliveryFormat::class, nullable: true)]
+    public ?string $deliveryFormat;
 
     #[Optional('delivery_request_count', nullable: true)]
     public ?float $deliveryRequestCount;
@@ -341,6 +351,7 @@ final class EventEnvelope implements BaseModel
      * @param Reason|value-of<Reason>|null $reason
      * @param StartupOutcome|value-of<StartupOutcome>|null $startupOutcome
      * @param Omit|BrowserContext|BrowserContextShape|null $browserContext
+     * @param Omit|DeliveryFormat|value-of<DeliveryFormat>|null $deliveryFormat
      * @param list<RenditionPlayingTime|RenditionPlayingTimeShape>|Omit|null $renditionPlayingTime
      * @param Omit|VisibilityState|value-of<VisibilityState>|null $visibilityState
      */
@@ -367,6 +378,7 @@ final class EventEnvelope implements BaseModel
         string $viewID,
         ?string $viewerID,
         Omit|BrowserContext|array|null $browserContext = Omit::Value,
+        Omit|DeliveryFormat|string|null $deliveryFormat = Omit::Value,
         float|Omit|null $deliveryRequestCount = Omit::Value,
         float|Omit|null $deliveryThroughputBps = Omit::Value,
         float|Omit|null $deliveryTransferredBytes = Omit::Value,
@@ -422,6 +434,7 @@ final class EventEnvelope implements BaseModel
         $self['viewerID'] = $viewerID;
 
         Omit::Value !== $browserContext && $self['browserContext'] = $browserContext;
+        Omit::Value !== $deliveryFormat && $self['deliveryFormat'] = $deliveryFormat;
         Omit::Value !== $deliveryRequestCount && $self['deliveryRequestCount'] = $deliveryRequestCount;
         Omit::Value !== $deliveryThroughputBps && $self['deliveryThroughputBps'] = $deliveryThroughputBps;
         Omit::Value !== $deliveryTransferredBytes && $self['deliveryTransferredBytes'] = $deliveryTransferredBytes;
@@ -667,6 +680,20 @@ final class EventEnvelope implements BaseModel
     ): self {
         $self = clone $this;
         $self['browserContext'] = $browserContext;
+
+        return $self;
+    }
+
+    /**
+     * How the player receives the media: hls for an HLS stream, file for a single media file such as an MP4 rendition; null when unknown. Optional: older SDKs omit it. Reports read it from each view's first start. Unlike connector_name, it does not depend on the playback engine: Safari's native HLS reports html-media.
+     *
+     * @param DeliveryFormat|value-of<DeliveryFormat>|null $deliveryFormat
+     */
+    public function withDeliveryFormat(
+        DeliveryFormat|string|null $deliveryFormat
+    ): self {
+        $self = clone $this;
+        $self['deliveryFormat'] = $deliveryFormat;
 
         return $self;
     }

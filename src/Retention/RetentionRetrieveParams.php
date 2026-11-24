@@ -10,6 +10,7 @@ use ChunkifyAnalytics\Core\Concerns\SdkModel;
 use ChunkifyAnalytics\Core\Concerns\SdkParams;
 use ChunkifyAnalytics\Core\Contracts\BaseModel;
 use ChunkifyAnalytics\Retention\RetentionRetrieveParams\Continent;
+use ChunkifyAnalytics\Retention\RetentionRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Retention\RetentionRetrieveParams\DeviceType;
 
 /**
@@ -23,6 +24,7 @@ use ChunkifyAnalytics\Retention\RetentionRetrieveParams\DeviceType;
  *   city?: string|null,
  *   continent?: null|Continent|value-of<Continent>,
  *   country?: string|null,
+ *   deliveryFormat?: null|DeliveryFormat|value-of<DeliveryFormat>,
  *   deviceType?: null|DeviceType|value-of<DeviceType>,
  *   from?: \DateTimeInterface|null,
  *   osName?: string|null,
@@ -74,6 +76,14 @@ final class RetentionRetrieveParams implements BaseModel
      */
     #[Optional]
     public ?string $country;
+
+    /**
+     * Delivery format on the first retained view start: hls for HLS streams, file for a single media file such as an MP4 rendition. Metrics use the first retained view start; raw events use each event's value. Views whose SDK did not report it do not match. connector_name is not a substitute: Safari plays HLS natively and reports html-media.
+     *
+     * @var value-of<DeliveryFormat>|null $deliveryFormat
+     */
+    #[Optional(enum: DeliveryFormat::class)]
+    public ?string $deliveryFormat;
 
     /**
      * Exact device class. unknown matches an explicit unknown value.
@@ -174,6 +184,7 @@ final class RetentionRetrieveParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Continent|value-of<Continent>|null $continent
+     * @param DeliveryFormat|value-of<DeliveryFormat>|null $deliveryFormat
      * @param DeviceType|value-of<DeviceType>|null $deviceType
      */
     public static function with(
@@ -182,6 +193,7 @@ final class RetentionRetrieveParams implements BaseModel
         ?string $city = null,
         Continent|string|null $continent = null,
         ?string $country = null,
+        DeliveryFormat|string|null $deliveryFormat = null,
         DeviceType|string|null $deviceType = null,
         ?\DateTimeInterface $from = null,
         ?string $osName = null,
@@ -203,6 +215,7 @@ final class RetentionRetrieveParams implements BaseModel
         null !== $city && $self['city'] = $city;
         null !== $continent && $self['continent'] = $continent;
         null !== $country && $self['country'] = $country;
+        null !== $deliveryFormat && $self['deliveryFormat'] = $deliveryFormat;
         null !== $deviceType && $self['deviceType'] = $deviceType;
         null !== $from && $self['from'] = $from;
         null !== $osName && $self['osName'] = $osName;
@@ -272,6 +285,20 @@ final class RetentionRetrieveParams implements BaseModel
     {
         $self = clone $this;
         $self['country'] = $country;
+
+        return $self;
+    }
+
+    /**
+     * Delivery format on the first retained view start: hls for HLS streams, file for a single media file such as an MP4 rendition. Metrics use the first retained view start; raw events use each event's value. Views whose SDK did not report it do not match. connector_name is not a substitute: Safari plays HLS natively and reports html-media.
+     *
+     * @param DeliveryFormat|value-of<DeliveryFormat> $deliveryFormat
+     */
+    public function withDeliveryFormat(
+        DeliveryFormat|string $deliveryFormat
+    ): self {
+        $self = clone $this;
+        $self['deliveryFormat'] = $deliveryFormat;
 
         return $self;
     }

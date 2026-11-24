@@ -34,5 +34,7 @@ enum Dimension: string
 
     case PLAYBACK_RATE = 'playback_rate';
 
+    case DELIVERY_FORMAT = 'delivery_format';
+
     case CUSTOM_KEYS = 'custom_keys';
 }
