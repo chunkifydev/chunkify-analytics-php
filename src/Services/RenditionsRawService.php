@@ -11,6 +11,7 @@ use ChunkifyAnalytics\Core\Util;
 use ChunkifyAnalytics\Renditions\RenditionReport;
 use ChunkifyAnalytics\Renditions\RenditionRetrieveParams;
 use ChunkifyAnalytics\Renditions\RenditionRetrieveParams\Continent;
+use ChunkifyAnalytics\Renditions\RenditionRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Renditions\RenditionRetrieveParams\DeviceType;
 use ChunkifyAnalytics\RequestOptions;
 use ChunkifyAnalytics\ServiceContracts\RenditionsRawContract;
@@ -38,6 +39,7 @@ final class RenditionsRawService implements RenditionsRawContract
      *   city?: string,
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   limit?: int,
@@ -76,6 +78,7 @@ final class RenditionsRawService implements RenditionsRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'osName' => 'os_name',
                     'pageOrigin' => 'page_origin',

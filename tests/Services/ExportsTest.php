@@ -62,6 +62,7 @@ final class ExportsTest extends TestCase
                 'city' => 'x',
                 'continent' => 'AF',
                 'country' => 'SE',
+                'deliveryFormat' => 'hls',
                 'deviceType' => 'desktop',
                 'dimension' => 'browser_name',
                 'eventName' => 'chunkify.video.view_started',

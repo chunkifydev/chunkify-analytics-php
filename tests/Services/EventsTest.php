@@ -215,6 +215,7 @@ final class EventsTest extends TestCase
                 'custom' => [
                     'plan' => 'premium', 'ab_test' => 'B', 'seats' => 5, 'trial' => false,
                 ],
+                'deliveryFormat' => 'hls',
                 'playbackRate' => 0.01,
                 'playbackRatePlayingTime' => [['playingTimeMs' => 0, 'rate' => 0.01]],
                 'playedRanges' => [['endSeconds' => 0, 'startSeconds' => 0]],

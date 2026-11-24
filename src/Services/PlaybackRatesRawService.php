@@ -11,6 +11,7 @@ use ChunkifyAnalytics\Core\Util;
 use ChunkifyAnalytics\PlaybackRates\PlaybackRateReport;
 use ChunkifyAnalytics\PlaybackRates\PlaybackRateRetrieveParams;
 use ChunkifyAnalytics\PlaybackRates\PlaybackRateRetrieveParams\Continent;
+use ChunkifyAnalytics\PlaybackRates\PlaybackRateRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\PlaybackRates\PlaybackRateRetrieveParams\DeviceType;
 use ChunkifyAnalytics\RequestOptions;
 use ChunkifyAnalytics\ServiceContracts\PlaybackRatesRawContract;
@@ -38,6 +39,7 @@ final class PlaybackRatesRawService implements PlaybackRatesRawContract
      *   city?: string,
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   limit?: int,
@@ -76,6 +78,7 @@ final class PlaybackRatesRawService implements PlaybackRatesRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'osName' => 'os_name',
                     'pageOrigin' => 'page_origin',

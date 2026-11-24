@@ -10,6 +10,7 @@ use ChunkifyAnalytics\Core\Concerns\SdkModel;
 use ChunkifyAnalytics\Core\Concerns\SdkParams;
 use ChunkifyAnalytics\Core\Contracts\BaseModel;
 use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\Continent;
+use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\DeliveryFormat;
 use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\DeviceType;
 use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\Interval;
 use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\Kind;
@@ -27,6 +28,7 @@ use ChunkifyAnalytics\Timeseries\TimeseryRetrieveParams\Kind;
  *   city?: string|null,
  *   continent?: null|Continent|value-of<Continent>,
  *   country?: string|null,
+ *   deliveryFormat?: null|DeliveryFormat|value-of<DeliveryFormat>,
  *   deviceType?: null|DeviceType|value-of<DeviceType>,
  *   kind?: null|Kind|value-of<Kind>,
  *   osName?: string|null,
@@ -92,6 +94,14 @@ final class TimeseryRetrieveParams implements BaseModel
      */
     #[Optional]
     public ?string $country;
+
+    /**
+     * Delivery format on the first retained view start: hls for HLS streams, file for a single media file such as an MP4 rendition. Metrics use the first retained view start; raw events use each event's value. Views whose SDK did not report it do not match. connector_name is not a substitute: Safari plays HLS natively and reports html-media.
+     *
+     * @var value-of<DeliveryFormat>|null $deliveryFormat
+     */
+    #[Optional(enum: DeliveryFormat::class)]
+    public ?string $deliveryFormat;
 
     /**
      * Exact device class. unknown matches an explicit unknown value.
@@ -195,6 +205,7 @@ final class TimeseryRetrieveParams implements BaseModel
      *
      * @param Interval|value-of<Interval> $interval
      * @param Continent|value-of<Continent>|null $continent
+     * @param DeliveryFormat|value-of<DeliveryFormat>|null $deliveryFormat
      * @param DeviceType|value-of<DeviceType>|null $deviceType
      * @param Kind|value-of<Kind>|null $kind
      */
@@ -206,6 +217,7 @@ final class TimeseryRetrieveParams implements BaseModel
         ?string $city = null,
         Continent|string|null $continent = null,
         ?string $country = null,
+        DeliveryFormat|string|null $deliveryFormat = null,
         DeviceType|string|null $deviceType = null,
         Kind|string|null $kind = null,
         ?string $osName = null,
@@ -229,6 +241,7 @@ final class TimeseryRetrieveParams implements BaseModel
         null !== $city && $self['city'] = $city;
         null !== $continent && $self['continent'] = $continent;
         null !== $country && $self['country'] = $country;
+        null !== $deliveryFormat && $self['deliveryFormat'] = $deliveryFormat;
         null !== $deviceType && $self['deviceType'] = $deviceType;
         null !== $kind && $self['kind'] = $kind;
         null !== $osName && $self['osName'] = $osName;
@@ -322,6 +335,20 @@ final class TimeseryRetrieveParams implements BaseModel
     {
         $self = clone $this;
         $self['country'] = $country;
+
+        return $self;
+    }
+
+    /**
+     * Delivery format on the first retained view start: hls for HLS streams, file for a single media file such as an MP4 rendition. Metrics use the first retained view start; raw events use each event's value. Views whose SDK did not report it do not match. connector_name is not a substitute: Safari plays HLS natively and reports html-media.
+     *
+     * @param DeliveryFormat|value-of<DeliveryFormat> $deliveryFormat
+     */
+    public function withDeliveryFormat(
+        DeliveryFormat|string $deliveryFormat
+    ): self {
+        $self = clone $this;
+        $self['deliveryFormat'] = $deliveryFormat;
 
         return $self;
     }

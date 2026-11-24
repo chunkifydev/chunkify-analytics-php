@@ -14,6 +14,7 @@ use ChunkifyAnalytics\Views\View;
 use ChunkifyAnalytics\Views\ViewDetail;
 use ChunkifyAnalytics\Views\ViewListParams;
 use ChunkifyAnalytics\Views\ViewListParams\Continent;
+use ChunkifyAnalytics\Views\ViewListParams\DeliveryFormat;
 use ChunkifyAnalytics\Views\ViewListParams\DeviceType;
 use ChunkifyAnalytics\Views\ViewListParams\Order;
 use ChunkifyAnalytics\Views\ViewListParams\SortBy;
@@ -78,6 +79,7 @@ final class ViewsRawService implements ViewsRawContract
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
      *   cursor?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   hasFatalError?: bool,
@@ -119,6 +121,7 @@ final class ViewsRawService implements ViewsRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'hasFatalError' => 'has_fatal_error',
                     'osName' => 'os_name',

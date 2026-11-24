@@ -11,6 +11,7 @@ use ChunkifyAnalytics\Core\Util;
 use ChunkifyAnalytics\Errors\ErrorGroup;
 use ChunkifyAnalytics\Errors\ErrorListParams;
 use ChunkifyAnalytics\Errors\ErrorListParams\Continent;
+use ChunkifyAnalytics\Errors\ErrorListParams\DeliveryFormat;
 use ChunkifyAnalytics\Errors\ErrorListParams\DeviceType;
 use ChunkifyAnalytics\ErrorsPage;
 use ChunkifyAnalytics\RequestOptions;
@@ -40,6 +41,7 @@ final class ErrorsRawService implements ErrorsRawContract
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
      *   cursor?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   limit?: int,
@@ -78,6 +80,7 @@ final class ErrorsRawService implements ErrorsRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'osName' => 'os_name',
                     'pageOrigin' => 'page_origin',

@@ -12,6 +12,7 @@ use ChunkifyAnalytics\RequestOptions;
 use ChunkifyAnalytics\ServiceContracts\VideosRawContract;
 use ChunkifyAnalytics\Videos\VideoListParams;
 use ChunkifyAnalytics\Videos\VideoListParams\Continent;
+use ChunkifyAnalytics\Videos\VideoListParams\DeliveryFormat;
 use ChunkifyAnalytics\Videos\VideoListParams\DeviceType;
 use ChunkifyAnalytics\Videos\VideoListParams\Order;
 use ChunkifyAnalytics\Videos\VideoListParams\SortBy;
@@ -42,6 +43,7 @@ final class VideosRawService implements VideosRawContract
      *   continent?: Continent|value-of<Continent>,
      *   country?: string,
      *   cursor?: string,
+     *   deliveryFormat?: DeliveryFormat|value-of<DeliveryFormat>,
      *   deviceType?: DeviceType|value-of<DeviceType>,
      *   from?: \DateTimeInterface,
      *   limit?: int,
@@ -82,6 +84,7 @@ final class VideosRawService implements VideosRawContract
                 $parsed,
                 [
                     'browserName' => 'browser_name',
+                    'deliveryFormat' => 'delivery_format',
                     'deviceType' => 'device_type',
                     'osName' => 'os_name',
                     'pageOrigin' => 'page_origin',

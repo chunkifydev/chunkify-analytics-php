@@ -26,6 +26,8 @@ enum GroupBy: string
 
     case PLAYBACK_RATE = 'playback_rate';
 
+    case DELIVERY_FORMAT = 'delivery_format';
+
     case VIDEO_TITLE = 'video_title';
 
     case USER_ID = 'user_id';
