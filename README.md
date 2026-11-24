@@ -18,7 +18,7 @@ The REST API documentation can be found on [chunkify.dev](https://chunkify.dev/d
 <!-- x-release-please-start-version -->
 
 ```
-composer require "chunkify/chunkify-analytics-php 0.9.0"
+composer require "chunkify/chunkify-analytics-php 0.10.0"
 ```
 
 <!-- x-release-please-end -->
