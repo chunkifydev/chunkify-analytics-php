@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/chunkifydev/chunkify-analytics-php/compare/v0.9.0...v0.10.0) (2026-11-24)
+
+
+### Features
+
+* **api:** add delivery_format and seek timing ([93379d5](https://github.com/chunkifydev/chunkify-analytics-php/commit/93379d5f022aa2da640699d59ce06d53f63d3665))
+
 ## [0.9.0](https://github.com/chunkifydev/chunkify-analytics-php/compare/v0.0.1...v0.9.0) (2026-11-18)
 
 
